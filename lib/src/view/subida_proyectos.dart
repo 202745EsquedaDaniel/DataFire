@@ -16,6 +16,24 @@ class AltaProyectos extends StatelessWidget {
     final theme = Theme.of(context);
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text('Hola!'),
+              elevation: 6,
+              action: SnackBarAction(
+                textColor: Colors.white,
+                label: 'Cerrar',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              )));
+        },
+        icon: const Icon(Icons.receipt),
+        elevation: 8,
+        label: Row(
+            children: [Text('Alta Proyectos', style: TextStyle(fontSize: 15))]),
+      ),
       body: Stack(
         children: [
           Container(
@@ -28,13 +46,14 @@ class AltaProyectos extends StatelessWidget {
           Container(
               padding: const EdgeInsets.all(15),
               child: const Text(
-                'Alta Proyectos',
+                'Proyectos',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               )),
           Container(
             padding: const EdgeInsets.only(top: 55, left: 10),
             width: size.width > 600 ? size.width * 0.8 : 500,
-            child: Text('Es una prueba'),
+            child: Text(
+                'Da de alta proyectos y asignalo a tus clientes y trabajadores'),
           ),
         ],
       ),

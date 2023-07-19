@@ -1,3 +1,4 @@
+import 'package:datafire/src/view/vista_madre.dart';
 import 'package:datafire/src/widgets/side_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
@@ -22,28 +23,15 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: const Text('Hola!'),
-                elevation: 6,
-                action: SnackBarAction(
-                  textColor: Colors.white,
-                  label: 'Cerrar',
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  },
-                )));
-          },
-          icon: const Icon(Icons.receipt),
-          elevation: 8,
-          label:
-              Row(children: [Text('DataFire', style: TextStyle(fontSize: 15))]),
-        ),
         body: Row(
           children: [
             SideBar(
               controller: _controller,
+            ),
+            Expanded(
+              child: MotherView(
+                controller: _controller,
+              ),
             ),
           ],
         ),

@@ -70,16 +70,36 @@ class _SideBarState extends State<SideBar> {
       //aqui se editan la cantidad de pestañas
       items: [
         SidebarXItem(
-            icon: Icons.receipt,
+            icon: Icons.home,
             label: 'Inicio',
             onTap: () {
-              debugPrint('Hello');
+              debugPrint('Inicio');
             }),
-        const SidebarXItem(
-            icon: Icons.area_chart_outlined, label: 'Estadisticas'),
-        const SidebarXItem(icon: Icons.receipt, label: 'Alta Proyectos'),
-        const SidebarXItem(icon: Icons.person_2, label: 'Alta Clientes '),
-        const SidebarXItem(icon: Icons.person, label: 'Perfil'),
+        //const SidebarXItem(icon: Icons.area_chart_outlined, label: 'Estadisticas'),
+        SidebarXItem(
+            icon: Icons.assignment,
+            label: 'Alta Proyectos',
+            onTap: () {
+              debugPrint('Alta Proyectos');
+            }),
+        SidebarXItem(
+            icon: Icons.person_2,
+            label: 'Alta Clientes ',
+            onTap: () {
+              debugPrint('Alta Clientes');
+            }),
+        SidebarXItem(
+            icon: Icons.flag,
+            label: 'Alta Trabajadores',
+            onTap: () {
+              debugPrint('Control');
+            }),
+        SidebarXItem(
+            icon: Icons.account_balance,
+            label: 'Balance',
+            onTap: () {
+              debugPrint('Balance');
+            }),
       ],
     );
   }

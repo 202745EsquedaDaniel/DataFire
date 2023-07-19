@@ -2,21 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/colors.dart';
 
-class AltaClientes extends StatelessWidget {
-  const AltaClientes({super.key});
+class Home extends StatelessWidget {
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.receipt),
-        elevation: 8,
-        label: Row(
-            children: [Text('Alta Clientes', style: TextStyle(fontSize: 15))]),
-      ),
       body: Stack(
         children: [
           Container(
@@ -29,29 +22,16 @@ class AltaClientes extends StatelessWidget {
           Container(
               padding: const EdgeInsets.all(15),
               child: const Text(
-                'Clientes',
+                'Home',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               )),
           Container(
             padding: const EdgeInsets.only(top: 55, left: 10),
             width: size.width > 600 ? size.width * 0.8 : 500,
-            child: Text(
-                'En esta seccion se mostraran sus clientes o poder dar de alta clientes'),
+            child: Text('Revisa tu flujo'),
           ),
         ],
       ),
     );
   }
 }
-
-  //funcion de snack bar
-        //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //  content: const Text('Hola!'),
-            //  elevation: 6,
-             // action: SnackBarAction(
-              //  textColor: Colors.white,
-              //  label: 'Cerrar',
-              //  onPressed: () {
-              //    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-             //   },
-            //  )));
