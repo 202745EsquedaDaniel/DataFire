@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/colors.dart';
 
+//Vista donde los clientes se van a dar de alta
+
 class AltaClientes extends StatelessWidget {
   const AltaClientes({super.key});
 
@@ -35,7 +37,7 @@ class AltaClientes extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(top: 55, left: 10),
             width: size.width > 600 ? size.width * 0.8 : 500,
-            child: Text(
+            child: const Text(
                 'En esta seccion se mostraran sus clientes o poder dar de alta clientes'),
           ),
         ],

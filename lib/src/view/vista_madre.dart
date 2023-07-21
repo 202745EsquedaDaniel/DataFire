@@ -6,6 +6,7 @@ import 'package:sidebarx/sidebarx.dart';
 
 import 'home.dart';
 
+//Esta vista une todos los accessos a los modulos existentes
 class MotherView extends StatelessWidget {
   const MotherView({super.key, required this.controller});
   final SidebarXController controller;

@@ -17,18 +17,7 @@ class AltaProyectos extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Text('Hola!'),
-              elevation: 6,
-              action: SnackBarAction(
-                textColor: Colors.white,
-                label: 'Cerrar',
-                onPressed: () {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                },
-              )));
-        },
+        onPressed: () {},
         icon: const Icon(Icons.receipt),
         elevation: 8,
         label: Row(
