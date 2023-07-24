@@ -1,4 +1,7 @@
+import 'package:datafire/src/model/alta_clientes.dart';
 import 'package:flutter/material.dart';
+
+import '../model/alta_proyectos.dart';
 
 class AltaClientePage extends StatefulWidget {
   @override
@@ -8,6 +11,8 @@ class AltaClientePage extends StatefulWidget {
 class _AltaClientePageState extends State<AltaClientePage> {
   final _formKey = GlobalKey<FormState>();
   final _nombreController = TextEditingController();
+
+  List<Clientes> clientes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -53,4 +58,13 @@ class _AltaClientePageState extends State<AltaClientePage> {
       ),
     );
   }
+
+  void crearClienteConProyecto(
+      String nombreP, String descripcion, String nombreC) {
+    var proyecto = Proyecto(nombreP, descripcion);
+    var cliente = Clientes(nombreC, proyectos: [proyecto]);
+    clientes.add(cliente);
+  }
+
+  void crearCliente() {}
 }

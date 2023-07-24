@@ -5,7 +5,7 @@ class Proyecto {
   String nombre;
   String descripcion;
   Clientes? cliente;
-  List<Trabajadores> trabajadores;
+  List<Trabajadores>? trabajadores;
 
-  Proyecto(this.nombre, this.descripcion, this.trabajadores, {this.cliente});
+  Proyecto(this.nombre, this.descripcion, {this.cliente, this.trabajadores});
 }
