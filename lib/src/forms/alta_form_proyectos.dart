@@ -25,7 +25,7 @@ class _AltaClientePageState extends State<AltaClientePage> {
               TextFormField(
                 controller: _nombreController,
                 decoration: InputDecoration(
-                  labelText: 'Nombre del Cliente',
+                  labelText: 'Nombre del Proyecto',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
