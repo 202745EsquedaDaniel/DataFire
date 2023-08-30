@@ -30,12 +30,14 @@ app.MapGet("/todoitems", async (TodoDb db) =>
 app.MapGet("/todoitems/complete", async (TodoDb db) =>
     await db.Todos.Where(t => t.IsComplete).ToListAsync());
 
+//Get que obtiene los datos mediante el id
 app.MapGet("/todoitems/{id}", async (int id, TodoDb db) =>
     await db.Todos.FindAsync(id)
         is Todo todo
             ? Results.Ok(todo)
             : Results.NotFound());
 
+//API QUE LLAMA A TODOS LOS ITEMS DE LA LISTA
 app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
 {
     db.Todos.Add(todo);
