@@ -23,3 +23,10 @@ C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\refint\DtFire.dll
 C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\DtFire.pdb
 C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\DtFire.genruntimeconfig.cache
 C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\ref\DtFire.dll
+C:\Users\Sistemas\datafire\DtFire\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\Users\Sistemas\datafire\DtFire\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Sistemas\datafire\DtFire\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Sistemas\datafire\DtFire\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\DtFire.csproj.AssemblyReference.cache
+C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\DtFire.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Sistemas\datafire\DtFire\obj\Debug\net7.0\DtFire.csproj.CopyComplete
