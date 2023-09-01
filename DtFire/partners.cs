@@ -4,5 +4,6 @@ public class Partners{
     public string? apellidoCliente {get;set;}
     public bool? linkProtecto {get;set;}
     public float deuda {get;set;}
+    public string[]? proyectos {get;set;}
     
 }
