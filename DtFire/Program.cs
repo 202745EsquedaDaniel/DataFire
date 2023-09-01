@@ -22,17 +22,28 @@ builder.Services.AddSwaggerGen(c=> {
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI( c=>{c.SwaggerEndpoint("/swagger/v1/swagger.json","DataFire API V1");});
+app.UseSwaggerUI( c => {c.SwaggerEndpoint("/swagger/v1/swagger.json","DataFire API V1");});
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/Getworkers", () => {} );
 
-//Post data 
-app.MapPost("/workers",async(WorkerDb db) => await db.Workers.ToListAsync());
-app.MapPost("/partners", async(PartnerDb db) => await db.Partners.ToListAsync());
-app.MapPost("/projects", async(ProjectDb db)=> await db.Projects.ToListAsync());
+//Zona de enrutamiento de los trabajadores
+app.MapGet("/workers",async(WorkerDb db) => await db.Workers.ToListAsync());
 
+//Zona de enrutamiento de los clientes
+app.MapGet("/partners", async(PartnerDb db) => await db.Partners.ToListAsync());
+
+
+
+//Zona de enrutamiento de los proyectos
+app.MapGet("/projects", async(ProjectDb db) => 
+    await db.Projects.ToListAsync());
+
+app.MapPost("/projects/{id}", async(int id, ProjectDb db) => 
+    await db.Projects.FindAsync(id)
+        is  Projects projects
+        ? Results.Ok(projects)
+        : Results.NotFound());
 
 
 app.MapGet("/todoitems", async (TodoDb db) =>
