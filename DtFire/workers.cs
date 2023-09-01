@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 public class Workers{
     public int Id {get;set;}
     public string? nombre{get;set;}
@@ -7,4 +9,11 @@ public class Workers{
     public float pago{get;set;}
     public DateTime fechaPago{get;set;}
     public float pagoMensual{get;set;}
+}
+
+class WorkerDb : DbContext{
+    public WorkerDb(DbContextOptions<WorkerDb> options)
+        :base(options){}
+
+    public DbSet<Workers> Todos => Set<Workers>();
 }

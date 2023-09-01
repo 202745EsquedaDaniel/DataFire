@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 public class Projects {
     public int Id {get; set;}
     public string? nameProyecto {get;set;}
@@ -11,4 +12,11 @@ public class Projects {
     public string[]? clientes {get;set;}
     public string[]? trabajadores {get;set;}
 
+}
+
+class ProjectDb : DbContext{
+    public ProjectDb (DbContextOptions<ProjectDb> options ) 
+        :base(options){}
+    
+    public DbSet<Projects> Projects => Set<Projects>();
 }
