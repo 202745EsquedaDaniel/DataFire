@@ -34,7 +34,7 @@ app.MapGet("/workers",async(WorkerDb db) => await db.Workers.ToListAsync());
 app.MapGet("/partners", async(PartnerDb db) => await db.Partners.ToListAsync());
 
 
-
+//**
 //Zona de enrutamiento de los proyectos
 app.MapGet("/projects", async(ProjectDb db) => 
     await db.Projects.ToListAsync());
@@ -45,7 +45,7 @@ app.MapPost("/projects/{id}", async(int id, ProjectDb db) =>
         ? Results.Ok(projects)
         : Results.NotFound());
 
-
+//**
 app.MapGet("/todoitems", async (TodoDb db) =>
     await db.Todos.ToListAsync());
 
