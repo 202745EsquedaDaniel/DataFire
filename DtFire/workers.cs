@@ -15,5 +15,5 @@ class WorkerDb : DbContext{
     public WorkerDb(DbContextOptions<WorkerDb> options)
         :base(options){}
 
-    public DbSet<Workers> Todos => Set<Workers>();
+    public DbSet<Workers> Workers => Set<Workers>();
 }

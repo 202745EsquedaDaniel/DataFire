@@ -2,7 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddDbContext<WorkerDb>(opt => opt.UseInMemoryDatabase("WorkerList"));
+builder.Services.AddDbContext<PartnerDb>(opt => opt.UseInMemoryDatabase("PartnerList"));
+builder.Services.AddDbContext<ProjectDb>(opt => opt.UseInMemoryDatabase("ProjectList"));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c=> {
@@ -22,7 +27,13 @@ app.UseSwaggerUI( c=>{c.SwaggerEndpoint("/swagger/v1/swagger.json","DataFire API
 app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/Getworkers", () => {} );
-app.MapPost("/Workers",()=>{});
+
+//Post data 
+app.MapPost("/workers",async(WorkerDb db) => await db.Workers.ToListAsync());
+app.MapPost("/partners", async(PartnerDb db) => await db.Partners.ToListAsync());
+app.MapPost("/projects", async(ProjectDb db)=> await db.Projects.ToListAsync());
+
+
 
 app.MapGet("/todoitems", async (TodoDb db) =>
     await db.Todos.ToListAsync());
@@ -59,7 +70,7 @@ app.MapPut("/todoitems/{id}", async (int id, Todo inputTodo, TodoDb db) =>
 
     return Results.NoContent();
 });
-
+//Borrar mediante id un item de la lista
 app.MapDelete("/todoitems/{id}", async (int id, TodoDb db) =>
 {
     if (await db.Todos.FindAsync(id) is Todo todo)
