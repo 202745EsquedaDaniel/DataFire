@@ -66,7 +66,19 @@ app.MapPut("/projects/{id}", async (int id,Projects px,ProjectDb db ) =>
     return Results.NoContent();
 });
 
+app.MapDelete("/projects/{id}", async (int id, ProjectDb db) => 
+{
+    if(await db.Projects.FindAsync(id) is Projects px ){
+        db.Projects.Remove(px);
+        await db.SaveChangesAsync();
+        return Results.NoContent();
+
+    }
+    return Results.NotFound();
+});
+
 //**
+
 app.MapGet("/todoitems", async (TodoDb db) =>
     await db.Todos.ToListAsync());
 
