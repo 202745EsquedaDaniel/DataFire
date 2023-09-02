@@ -39,11 +39,32 @@ app.MapGet("/partners", async(PartnerDb db) => await db.Partners.ToListAsync());
 app.MapGet("/projects", async(ProjectDb db) => 
     await db.Projects.ToListAsync());
 
+app.MapGet("/projects/complete", async (ProjectDb db)=> 
+    await db.Projects.Where(t=> t.IsComplete).ToListAsync());
+
 app.MapPost("/projects/{id}", async(int id, ProjectDb db) => 
     await db.Projects.FindAsync(id)
         is  Projects projects
         ? Results.Ok(projects)
         : Results.NotFound());
+
+app.MapPost("/projects", async (Projects px, ProjectDb db) => {
+    db.Projects.Add(px);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/projects/{px.Id}", px);
+});
+
+app.MapPut("/projects/{id}", async (int id,Projects px,ProjectDb db ) => 
+{
+    var pj = await db.Projects.FindAsync(id);
+
+    if(pj is null) return Results.NotFound();
+    
+    await db.SaveChangesAsync();
+    
+    return Results.NoContent();
+});
 
 //**
 app.MapGet("/todoitems", async (TodoDb db) =>

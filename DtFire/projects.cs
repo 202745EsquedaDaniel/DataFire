@@ -12,6 +12,8 @@ public class Projects {
     public string[]? clientes {get;set;}
     public string[]? trabajadores {get;set;}
 
+    public bool IsComplete {get;set;}
+
 }
 
 class ProjectDb : DbContext{
