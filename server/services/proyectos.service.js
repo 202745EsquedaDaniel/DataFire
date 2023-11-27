@@ -34,6 +34,15 @@ class ProjectService {
     const project = this.projects.find((item) => item.id === id);
     return project;
   }
+
+  create(data) {
+    const newProject = {
+      id: faker.string.uuid(),
+      ...data,
+    };
+    this.projects.push(newProject);
+    return newProject;
+  }
 }
 
 module.exports = ProjectService;

@@ -9,22 +9,14 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    id,
-    name: 'Eduardo',
-    last_name: 'Esquivel',
-    age: 22,
-    position: 'trainee',
-    salary: 200,
-  });
+  const worker = service.findOne(id);
+  res.json(worker);
 });
 
 router.post('/', (req, res) => {
   const body = req.body;
-  res.json({
-    message: 'created',
-    data: body,
-  });
+  const newWorker = service.create(body);
+  res.json(newWorker);
 });
 
 router.patch('/:id', (req, res) => {

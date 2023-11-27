@@ -21,4 +21,6 @@ app.get('/trabajadores', (req, res) => {
   res.send('trabajadores');
 });
 
+app.use(express.json());
+
 routerApi(app);

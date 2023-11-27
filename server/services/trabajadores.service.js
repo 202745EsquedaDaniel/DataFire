@@ -17,5 +17,19 @@ class WorkerService {
       });
     }
   }
+
+  findOne(id) {
+    const worker = this.workers.find((item) => item.id === id);
+    return worker;
+  }
+
+  create(data) {
+    const newWorker = {
+      id: faker.string.uuid(),
+      ...data,
+    };
+    this.workers.push(newWorker);
+    return newWorker;
+  }
 }
 module.exports = WorkerService;
