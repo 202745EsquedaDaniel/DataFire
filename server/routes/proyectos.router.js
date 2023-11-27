@@ -1,45 +1,46 @@
-const express = require("express")
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const ProjectService = require('../services/proyectos.service');
+const service = new ProjectService();
 
-router.get("/", (req,res)=>{
-  res.send("Proyectos")
-})
+router.get('/', (req, res) => {
+  res.send(service.projects);
+});
 
-
-router.get("/:id", (req,res) => {
-  const {id} = req.params;
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
   res.json({
     id,
-    name: "proyecto 1",
-    fecha_inicio: "11/23/2023",
-    fecha_fin:"11/24/2023"
-  })
-})
+    name: 'proyecto 1',
+    fecha_inicio: '11/23/2023',
+    fecha_fin: '11/24/2023',
+  });
+});
 
-router.post("/", (req,res) => {
+router.post('/', (req, res) => {
   const body = req.body;
   res.json({
-    message:"created",
-    data: body
-  })
-})
-
-router.patch("/:id", (req,res) => {
-  const body = req.body;
-  const {id} = req.params;
-  res.json({
-    message: "updated",
+    message: 'created',
     data: body,
-    id
-  })
-})
+  });
+});
 
-router.delete("/:id", (req, res) =>{
-  const {id} = req.params;
+router.patch('/:id', (req, res) => {
+  const body = req.body;
+  const { id } = req.params;
   res.json({
-    message:"deleted",
-    id
-  })
-})
+    message: 'updated',
+    data: body,
+    id,
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({
+    message: 'deleted',
+    id,
+  });
+});
 
 module.exports = router;
