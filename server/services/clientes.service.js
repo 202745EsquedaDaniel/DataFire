@@ -17,6 +17,11 @@ class CustomersService {
       });
     }
   }
+
+  findOne(id) {
+    const customer = this.customers.find((item) => item.id === id);
+    return customer;
+  }
 }
 
 module.exports = CustomersService;

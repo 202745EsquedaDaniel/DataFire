@@ -9,12 +9,8 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    id,
-    name: 'Eduardo',
-    last_name: 'Esqueda',
-    company: 'Capsule corp',
-  });
+  const customer = service.findOne(id);
+  res.json(customer);
 });
 
 router.post('/', (req, res) => {

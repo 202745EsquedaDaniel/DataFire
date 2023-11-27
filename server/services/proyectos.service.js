@@ -15,10 +15,24 @@ class ProjectService {
       });
       this.projects.push({
         id: faker.string.uuid(),
+        name: faker.company.name(),
         fecha_inicio: faker.date.past(),
         fecha_fin: endDate,
       });
     }
+  }
+
+  find() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.projects);
+      }, 5000);
+    });
+  }
+
+  findOne(id) {
+    const project = this.projects.find((item) => item.id === id);
+    return project;
   }
 }
 

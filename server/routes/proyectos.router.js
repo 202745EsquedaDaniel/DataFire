@@ -9,12 +9,8 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    id,
-    name: 'proyecto 1',
-    fecha_inicio: '11/23/2023',
-    fecha_fin: '11/24/2023',
-  });
+  const project = service.findOne(id);
+  res.json(project);
 });
 
 router.post('/', (req, res) => {
