@@ -3,14 +3,23 @@ const router = express.Router();
 const WorkerService = require('../services/trabajadores.service');
 const service = new WorkerService();
 
-router.get('/', (req, res) => {
-  res.send(service.workers);
+router.get('/', async(req, res, next) => {
+  try {
+    const workers = await service.find()
+    res.json(workers)
+  } catch (error) {
+    next(error)
+  }
 });
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const worker = service.findOne(id);
-  res.json(worker);
+router.get('/:id', async (req, res,next) => {
+  try {
+    const { id } = req.params;
+    const worker = service.findOne(id);
+    res.json(worker);
+  } catch(error) {
+    console.error(error)
+  }
 });
 
 router.post('/', (req, res) => {

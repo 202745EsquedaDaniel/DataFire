@@ -1,9 +1,15 @@
 const { faker } = require('@faker-js/faker');
+const boom = require("@hapi/boom")
 
 class WorkerService {
   constructor() {
     (this.workers = []), this.generate();
   }
+
+async find() {
+  return this.workers
+}
+
   generate() {
     const limit = 10;
     for (let index = 0; index < 10; index++) {
@@ -20,6 +26,9 @@ class WorkerService {
 
   findOne(id) {
     const worker = this.workers.find((item) => item.id === id);
+    if (!worker) {
+      throw boom.notFound("Worked not found")
+    }
     return worker;
   }
 
@@ -34,6 +43,10 @@ class WorkerService {
 
   update(id, changes){
     const index = this.workers.findIndex(item => item.id === id) //it finds the worker id
+    console.log(index)
+    if (index === -1) {
+      throw boom.notFound("Product not found")
+    }
     const worker = this.workers[index] //save the selected worker
     this.workers[index] = {
       ...worker, //build the worker
@@ -44,6 +57,9 @@ class WorkerService {
 
   delete(id){
     const index = this.workers.findIndex(item => item.id === id)
+    if (index === -1) {
+      throw boom.notFound("Product not found")
+    }
     this.workers.splice(index,1)
     return {id}
   }
