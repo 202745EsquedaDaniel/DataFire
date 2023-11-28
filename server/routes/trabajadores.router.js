@@ -15,30 +15,47 @@ router.get('/', async(req, res, next) => {
 router.get('/:id', async (req, res,next) => {
   try {
     const { id } = req.params;
-    const worker = service.findOne(id);
+    const worker = await service.findOne(id);
     res.json(worker);
   } catch(error) {
     console.error(error)
   }
 });
 
-router.post('/', (req, res) => {
-  const body = req.body;
-  const newWorker = service.create(body);
-  res.json(newWorker);
+router.post('/',
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newWorker = await service.create(body);
+      res.json(newWorker);
+    } catch (error) {
+      next(error)
+    }
+
 });
 
-router.patch('/:id', (req, res) => {
-  const body = req.body;
-  const { id } = req.params;
-  const worker = service.update(id, body)
-  res.json(worker);
+router.patch('/:id',
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const { id } = req.params;
+      const worker = await service.update(id, body)
+      res.json(worker);
+    } catch (error) {
+      next(error)
+    }
+
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  service.delete(id)
-  res.json({id});
+router.delete('/:id',
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.delete(id)
+      res.json({id});
+    } catch (error) {
+      next(error)
+    }
 });
 
 module.exports = router;

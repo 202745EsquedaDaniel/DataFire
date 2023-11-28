@@ -18,6 +18,14 @@ class CustomersService {
     }
   }
 
+  find() {
+    return new Promise((resolve,reject) => {
+      setTimeout(() => {
+        resolve(this.customers);
+      }, 5000);
+    });
+  }
+
   findOne(id) {
     const customer = this.customers.find((item) => item.id === id);
     return customer;

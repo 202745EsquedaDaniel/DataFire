@@ -23,7 +23,7 @@ class ProjectService {
   }
 
   find() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve,reject) => {
       setTimeout(() => {
         resolve(this.projects);
       }, 5000);
