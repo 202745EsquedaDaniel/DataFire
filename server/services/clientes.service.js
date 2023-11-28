@@ -31,6 +31,16 @@ class CustomersService {
     this.customers.push(newCustomer)
     return newCustomer
   }
+
+  update(id, changes) {
+    const index = this.customers.findIndex(item => item.id === id);
+    const customer = this.customers[index]
+    this.customers[index] = {
+      ...customer,
+      ...changes
+    }
+    return this.customers[index]
+  }
 }
 
 module.exports = CustomersService;

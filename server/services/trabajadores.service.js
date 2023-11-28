@@ -31,5 +31,15 @@ class WorkerService {
     this.workers.push(newWorker);
     return newWorker;
   }
+
+  update(id, changes){
+    const index = this.workers.findIndex(item => item.id === id) //it finds the worker id
+    const worker = this.workers[index] //save the selected worker
+    this.workers[index] = {
+      ...worker, //build the worker
+      ...changes //rewrite the changes
+    }
+    return this.workers[index] //return the edited json
+  }
 }
 module.exports = WorkerService;

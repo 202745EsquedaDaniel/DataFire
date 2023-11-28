@@ -43,6 +43,16 @@ class ProjectService {
     this.projects.push(newProject);
     return newProject;
   }
+
+  update(id, changes){
+    const index = this.projects.findIndex(item => item.id = id)
+    const project = this.projects[index]
+    this.projects[index] = {
+      ...project,
+      ...changes
+    }
+    return this.projects[index]
+  }
 }
 
 module.exports = ProjectService;

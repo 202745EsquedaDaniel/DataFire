@@ -22,11 +22,8 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const body = req.body;
   const { id } = req.params;
-  res.json({
-    message: 'updated',
-    data: body,
-    id,
-  });
+  const project = service.update(id, body)
+  res.json(project);
 });
 
 router.delete('/:id', (req, res) => {
@@ -36,5 +33,6 @@ router.delete('/:id', (req, res) => {
     id,
   });
 });
+
 
 module.exports = router;
