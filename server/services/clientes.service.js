@@ -22,6 +22,15 @@ class CustomersService {
     const customer = this.customers.find((item) => item.id === id);
     return customer;
   }
+
+  create(data){
+    const newCustomer = {
+      id: faker.string.uuid(),
+      ...data
+    }
+    this.customers.push(newCustomer)
+    return newCustomer
+  }
 }
 
 module.exports = CustomersService;

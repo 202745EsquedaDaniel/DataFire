@@ -15,10 +15,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const body = req.body;
-  res.json({
-    message: 'created',
-    data: body,
-  });
+  const newCustomer = service.create(body)
+  res.json(newCustomer);
 });
 
 router.patch('/:id', (req, res) => {
@@ -38,5 +36,7 @@ router.delete('/:id', (req, res) => {
     id,
   });
 });
+
+
 
 module.exports = router;
