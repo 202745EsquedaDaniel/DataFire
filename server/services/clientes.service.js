@@ -41,6 +41,12 @@ class CustomersService {
     }
     return this.customers[index]
   }
+
+  delete(id){
+    const index = this.customers.findIndex(item => item.id === id)
+    this.customers.splice(index,1)
+    return {id}
+  }
 }
 
 module.exports = CustomersService;

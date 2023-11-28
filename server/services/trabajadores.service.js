@@ -41,5 +41,11 @@ class WorkerService {
     }
     return this.workers[index] //return the edited json
   }
+
+  delete(id){
+    const index = this.workers.findIndex(item => item.id === id)
+    this.workers.splice(index,1)
+    return {id}
+  }
 }
 module.exports = WorkerService;

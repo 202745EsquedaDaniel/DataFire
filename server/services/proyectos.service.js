@@ -53,6 +53,12 @@ class ProjectService {
     }
     return this.projects[index]
   }
+
+  delete(id){
+    const index = this.projects.findIndex(item => item.id === id)
+    this.projects.splice(index,1)
+    return {id}
+  }
 }
 
 module.exports = ProjectService;
