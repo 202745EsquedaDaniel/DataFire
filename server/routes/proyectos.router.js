@@ -28,7 +28,7 @@ router.post('/',
     try {
       const body = req.body;
       const newProject = service.create(body);
-      res.json(newProject);
+      res.status(201).json(newProject);
     } catch (error) {
       next(error)
     }
@@ -53,11 +53,10 @@ router.delete('/:id',
     try {
       const { id } = req.params;
       await service.delete(id)
-      res.json({id});
+      res.status(201).json({id});
     } catch (error) {
       next(error)
     }
-
 });
 
 

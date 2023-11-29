@@ -18,7 +18,7 @@ router.get('/:id', async (req, res,next) => {
     const worker = await service.findOne(id);
     res.json(worker);
   } catch(error) {
-    console.error(error)
+    next(error)
   }
 });
 
@@ -27,7 +27,7 @@ router.post('/',
     try {
       const body = req.body;
       const newWorker = await service.create(body);
-      res.json(newWorker);
+      res.status(201).json(newWorker);
     } catch (error) {
       next(error)
     }
@@ -52,7 +52,7 @@ router.delete('/:id',
     try {
       const { id } = req.params;
       await service.delete(id)
-      res.json({id});
+      res.status(201).json({id});
     } catch (error) {
       next(error)
     }
