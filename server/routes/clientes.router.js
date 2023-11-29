@@ -3,6 +3,9 @@ const router = express.Router();
 const CustomersService = require('../services/clientes.service');
 const service = new CustomersService();
 
+const validatorHandler = require("../middlewares/validator.handler")
+const {createCustomersSchema} = require("../schemas/clientes.schema")
+
 router.get('/', async(req, res, next) => {
   try {
     const customers = await service.find()
@@ -15,7 +18,7 @@ router.get('/', async(req, res, next) => {
 router.get('/:id',
   async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params
       const customer = await service.findOne(id);
       res.json(customer);
     } catch (error) {
@@ -24,6 +27,7 @@ router.get('/:id',
 });
 
 router.post('/',
+validatorHandler(createCustomersSchema,"body"),
   async (req, res, next) => {
     try {
       const body = req.body;

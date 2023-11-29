@@ -3,6 +3,9 @@ const router = express.Router();
 const ProjectService = require('../services/proyectos.service');
 const service = new ProjectService();
 
+const validatorHandler = require("../middlewares/validator.handler")
+const {createProjectsSchema} = require("../schemas/proyectos.schema")
+
 router.get('/', async(req, res, next) => {
   try {
     const projects = await service.find()
@@ -16,7 +19,7 @@ router.get('/:id',
 async (req, res, next) => {
   try{
     const { id } = req.params;
-    const project = await service.findOne(id);
+    const project = await service.findOne(id)
     res.json(project);
   } catch (error) {
     next(error)
@@ -24,6 +27,7 @@ async (req, res, next) => {
 });
 
 router.post('/',
+  validatorHandler(createProjectsSchema, "body"),
   async (req, res, next) => {
     try {
       const body = req.body;
