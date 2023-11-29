@@ -1,5 +1,6 @@
 const { faker } = require('@faker-js/faker');
 const boom = require("@hapi/boom")
+const {create} = require("../schemas/trabajadores.schema")
 
 class WorkerService {
   constructor() {

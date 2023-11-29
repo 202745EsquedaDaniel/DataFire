@@ -3,6 +3,9 @@ const router = express.Router();
 const WorkerService = require('../services/trabajadores.service');
 const service = new WorkerService();
 
+const validatorHandler = require("../middlewares/validator.handler")
+const {createWorkersSchema} = require("../schemas/trabajadores.schema")
+
 router.get('/', async(req, res, next) => {
   try {
     const workers = await service.find()
@@ -22,8 +25,7 @@ router.get('/:id', async (req, res,next) => {
   }
 });
 
-router.post('/',
-  async (req, res, next) => {
+router.post('/',validatorHandler(createWorkersSchema, 'body'),async (req, res, next) => {
     try {
       const body = req.body;
       const newWorker = await service.create(body);
