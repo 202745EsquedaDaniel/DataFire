@@ -3,11 +3,11 @@ const {Model, DataTypes, Sequelize} = require("sequelize")
 const CUSTOMER_TABLE = "clientes"
 
 const CustomerSchema = {
-  id:{
+  id: {
     allowNull: false,
-    autoIncremente:  true,
+    autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.STRING
+    type: DataTypes.INTEGER
   },
   name:{
     allowNull: false,
@@ -31,13 +31,13 @@ const CustomerSchema = {
 
 class Customer extends Model {
   static() {
-    // asociate
+    // associate
   }
   static config(sequelize){
     return{
       sequelize,
       tableName: CUSTOMER_TABLE,
-      modelname:"Customer",
+      modelName: "Customer",
       timestamps: false
     }
   }
