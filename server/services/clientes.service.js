@@ -1,4 +1,5 @@
 const { faker } = require('@faker-js/faker');
+const getConection = require('../lib/postgres');
 
 class CustomersService {
   constructor() {
@@ -18,12 +19,10 @@ class CustomersService {
     }
   }
 
-  find() {
-    return new Promise((resolve,reject) => {
-      setTimeout(() => {
-        resolve(this.customers);
-      }, 5000);
-    });
+  async find() {
+    const client = await getConection();
+    const rta = await client.query('SELECT * FROM taks');
+    return rta.rows;
   }
 
   findOne(id) {
@@ -31,29 +30,29 @@ class CustomersService {
     return customer;
   }
 
-  create(data){
+  create(data) {
     const newCustomer = {
       id: faker.string.uuid(),
-      ...data
-    }
-    this.customers.push(newCustomer)
-    return newCustomer
+      ...data,
+    };
+    this.customers.push(newCustomer);
+    return newCustomer;
   }
 
   update(id, changes) {
-    const index = this.customers.findIndex(item => item.id === id);
-    const customer = this.customers[index]
+    const index = this.customers.findIndex((item) => item.id === id);
+    const customer = this.customers[index];
     this.customers[index] = {
       ...customer,
-      ...changes
-    }
-    return this.customers[index]
+      ...changes,
+    };
+    return this.customers[index];
   }
 
-  delete(id){
-    const index = this.customers.findIndex(item => item.id === id)
-    this.customers.splice(index,1)
-    return {id}
+  delete(id) {
+    const index = this.customers.findIndex((item) => item.id === id);
+    this.customers.splice(index, 1);
+    return { id };
   }
 }
 
