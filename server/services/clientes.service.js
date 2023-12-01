@@ -21,7 +21,7 @@ class CustomersService {
 
   async find() {
     const client = await getConection();
-    const rta = await client.query('SELECT * FROM taks');
+    const rta = await client.query('SELECT * FROM task');
     return rta.rows;
   }
 
