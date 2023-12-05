@@ -18,6 +18,7 @@ class ProjectService {
     if (!project) {
       throw boom.notFound("Project not found")
     }
+    return project
   }
 
   async create(data) {

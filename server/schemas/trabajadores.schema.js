@@ -1,6 +1,6 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-const id = Joi.string().uuid();
+const id = Joi.number().integer()
 const name = Joi.string();
 const last_name = Joi.string();
 const age = Joi.number();
@@ -8,7 +8,6 @@ const position = Joi.string();
 const salary = Joi.number().integer();
 
 const createWorkerSchema = Joi.object({
-  id: id.required(),
   name: name.required(),
   last_name: last_name.required(),
   age: age.required(),
@@ -17,7 +16,6 @@ const createWorkerSchema = Joi.object({
 });
 
 const updateWorkerSchema = Joi.object({
-  id: id,
   name: name,
   last_name: last_name,
   age: age,

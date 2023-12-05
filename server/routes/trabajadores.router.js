@@ -5,9 +5,9 @@ const service = new WorkerService();
 
 const validatorHandler = require('../middlewares/validator.handler');
 const {
-  createWorkersSchema,
-  updateWorkerSchema,
+  createWorkerSchema,
   getWorkerSchema,
+  updateWorkerSchema
 } = require('../schemas/trabajadores.schema');
 
 router.get('/', async (req, res, next) => {
@@ -35,7 +35,7 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(createWorkersSchema, 'body'),
+  validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;

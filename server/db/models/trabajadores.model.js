@@ -47,7 +47,7 @@ class Worker extends Model {
       sequelize,
       tableName: WORKER_TABLE,
       modelname: "worker",
-      timestams: false
+      timestamps: false
     }
   }
 }

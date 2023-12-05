@@ -4,66 +4,42 @@ const {create} = require("../schemas/trabajadores.schema")
 const {models} = require("../lib/sequelize")
 
 class WorkerService {
-  constructor() {
-    (this.workers = []), this.generate();
-  }
 
 async find() {
   const rta = await models.Worker.findAll()
   return rta
 }
 
-  generate() {
-    const limit = 10;
-    for (let index = 0; index < 10; index++) {
-      this.workers.push({
-        id: faker.string.uuid(),
-        name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        age: faker.number.int({ min: 18, max: 100 }),
-        position: faker.person.jobTitle(),
-        salary: faker.finance.amount(100, 100000, 2),
-      });
-    }
-  }
 
-  findOne(id) {
-    const worker = this.workers.find((item) => item.id === id);
+  async findOne(id) {
+    const worker = await models.Worker.findByPk(id)
     if (!worker) {
-      throw boom.notFound("Worked not found")
+      throw boom.notFound("Worker not found")
     }
     return worker;
   }
 
-  create(data) {
-    const newWorker = {
-      id: faker.string.uuid(),
-      ...data,
-    };
-    this.workers.push(newWorker);
-    return newWorker;
+  async create(data) {
+    const newWorker = await models.Worker.create(data)
+    return newWorker
   }
 
-  update(id, changes){
-    const index = this.workers.findIndex(item => item.id === id) //it finds the worker id
-    console.log(index)
-    if (index === -1) {
-      throw boom.notFound("Product not found")
+  async update(id, changes) {
+    const worker = await this.findOne(id);
+
+    if (!worker) {
+      throw boom.notFound("Worker not found");
     }
-    const worker = this.workers[index] //save the selected worker
-    this.workers[index] = {
-      ...worker, //build the worker
-      ...changes //rewrite the changes
-    }
-    return this.workers[index] //return the edited json
+
+    const rta = await worker.update(changes);
+    return rta;
   }
 
-  delete(id){
-    const index = this.workers.findIndex(item => item.id === id)
-    if (index === -1) {
-      throw boom.notFound("Product not found")
-    }
-    this.workers.splice(index,1)
+
+  async delete(id){
+    const worker = await this.findOne(id)
+
+    await worker.destroy()
     return {id}
   }
 }
