@@ -1,6 +1,5 @@
 const { faker } = require('@faker-js/faker');
-const pool = require("../lib/sequelize")
-const sequelize = require("../lib/sequelize")
+const {models} = require("../lib/sequelize")
 
 class ProjectService {
   constructor() {
@@ -25,9 +24,8 @@ class ProjectService {
   }
 
   async find() {
-    const query = "SELECT * FROM task"
-    const [data] = await sequelize.query(query)
-    return data
+    const rta = await models.Project.findAll()
+    return rta
   }
 
   findOne(id) {

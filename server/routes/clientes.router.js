@@ -40,7 +40,7 @@ router.post(
     try {
       const body = req.body;
       const newCustomer = await service.create(body);
-      res.status.apply(201).json(newCustomer);
+      res.status(201).json(newCustomer);
     } catch (error) {
       next(error);
     }
