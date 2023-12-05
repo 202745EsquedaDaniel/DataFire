@@ -1,6 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const boom = require("@hapi/boom")
 const {create} = require("../schemas/trabajadores.schema")
+const {models} = require("../lib/sequelize")
 
 class WorkerService {
   constructor() {
@@ -8,7 +9,8 @@ class WorkerService {
   }
 
 async find() {
-  return this.workers
+  const rta = await models.Worker.findAll()
+  return rta
 }
 
   generate() {
