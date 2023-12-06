@@ -8,10 +8,10 @@ const USER = encodeURIComponent(config.dbUser);
   module.exports = {
     development: {
       url: URI,
-      dialect: "postgres"
+      dialect: 'postgres',
     },
     production: {
       url: URI,
-      dialect: "postgres"
+      dialect: 'postgres',
     }
   }
