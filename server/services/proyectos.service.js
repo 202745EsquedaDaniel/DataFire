@@ -15,6 +15,7 @@ class ProjectService {
   async findOne(id) {
     const project = await models.Project.findByPk(id,{
       include: [
+        {association:"customer"},
       "customer"
     ]
 })

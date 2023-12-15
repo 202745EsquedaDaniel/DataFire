@@ -21,7 +21,8 @@ const updateProjectSchema = Joi.object({
   name: name,
   fecha_inicio: fecha_inicio,
   fecha_fin: fecha_fin,
-  costo: costo
+  costo: costo,
+  customer_id: customer_id
 });
 
 const getProjectSchema = Joi.object({
