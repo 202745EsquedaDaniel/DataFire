@@ -4,10 +4,10 @@ const { PROJECT_CUSTOMER_TABLE, ProjectCustomerSchema } = require('../models/pro
 
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.addColumn(PROJECT_CUSTOMER_TABLE, ProjectCustomerSchema);
+    await queryInterface.createTable(PROJECT_CUSTOMER_TABLE, ProjectCustomerSchema);
   },
 
   down: async (queryInterface) => {
-    await queryInterface.removeColumn(PROJECT_TABLE)
+    await queryInterface.createTable(PROJECT_TABLE)
   }
 };
