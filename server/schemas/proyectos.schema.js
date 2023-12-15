@@ -5,6 +5,9 @@ const name = Joi.string();
 fecha_inicio = Joi.date();
 fecha_fin = Joi.date();
 costo = Joi.number().integer();
+const abono = Joi.number().integer().min(1)
+const projectId = Joi.number().integer()
+const customerId = Joi.number().integer()
 
 const createProjectsSchema = Joi.object({
   name: name.required(),
@@ -25,8 +28,15 @@ const getProjectSchema = Joi.object({
   id: id.required(),
 });
 
+const addCustomerRESchema = Joi.object({
+  abono: abono.required(),
+  projectId: projectId.required(),
+  customerId: customerId.required()
+})
+
 module.exports = {
   createProjectsSchema,
   updateProjectSchema,
   getProjectSchema,
+  addCustomerRESchema
 };

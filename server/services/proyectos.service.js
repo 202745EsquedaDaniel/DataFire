@@ -14,6 +14,9 @@ class ProjectService {
 
   async findOne(id) {
     const project = await models.Project.findByPk(id)
+    include: [[
+      "customers"
+    ]]
 
     if (!project) {
       throw boom.notFound("Project not found")
@@ -24,6 +27,11 @@ class ProjectService {
   async create(data) {
     const newProject = await models.Project.create(data)
     return newProject
+  }
+
+  async addCustomer(data) {
+    const newCustomer = await models.ProjectCustomer.create(data)
+    return newCustomer
   }
 
   async update(id, changes){
