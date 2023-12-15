@@ -13,10 +13,11 @@ class ProjectService {
   }
 
   async findOne(id) {
-    const project = await models.Project.findByPk(id)
-    include: [[
-      "customers"
-    ]]
+    const project = await models.Project.findByPk(id,{
+      include: [
+      "customer"
+    ]
+})
 
     if (!project) {
       throw boom.notFound("Project not found")

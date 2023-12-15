@@ -8,7 +8,7 @@ const {
   createProjectsSchema,
   getProjectSchema,
   updateProjectSchema,
-  addCustomerSchema,
+  addCustomerRESchema,
 } = require('../schemas/proyectos.schema');
 
 router.get('/', async (req, res, next) => {

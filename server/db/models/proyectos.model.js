@@ -1,5 +1,7 @@
 const {Model, DataTypes, Sequelize} = require("sequelize")
 
+const {CUSTOMER_TABLE} = require("./cliente.model")
+
 const PROJECT_TABLE = "proyectos"
 
 const ProjectSchema = {
@@ -26,6 +28,18 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  customerId: {
+    field: "customer_id",
+    allowNull:false,
+    type: DataTypes.INTEGER,
+    references:{
+      model: CUSTOMER_TABLE,
+      key: "id"
+    },
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+    defaultValue: 0
+  },
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
@@ -36,11 +50,11 @@ const ProjectSchema = {
 
 class Project extends Model {
   static associate(models){
-    this.belongsToMany(models.Cusomer, {
-      as: "customers", //osea que un proyecto tiene varios clientes
+    this.belongsToMany(models.Customer, {
+      as: "customer", //osea que un proyecto tiene varios clientes
       through: models.ProjectCustomer,
-      foreignKey: "projectID",
-      otherKey: "customerId"
+      foreignKey: "project_id",
+      otherKey: "customer_id"
     })
   }
 

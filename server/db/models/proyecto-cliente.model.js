@@ -22,7 +22,7 @@ const ProjectCustomerSchema = {
     allowNull: false,
     type: DataTypes.INTEGER
   },
-  projectId: {
+  project_id: {
     field: "project_id",
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ const ProjectCustomerSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL"
   },
-  customerId: {
+  customer_id: {
     field: "customer_id",
     allowNull: false,
     type: DataTypes.INTEGER,

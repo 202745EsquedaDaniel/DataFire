@@ -8,6 +8,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.createTable(PROJECT_TABLE)
+    await queryInterface.createTable(PROJECT_CUSTOMER_TABLE)
   }
 };
