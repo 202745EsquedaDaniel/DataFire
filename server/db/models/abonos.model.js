@@ -2,7 +2,7 @@ const { Model, DataTypes, Sequelize } = require("sequelize");
 const { PROJECT_TABLE } = require("./proyectos.model");
 const { CUSTOMER_TABLE } = require("./cliente.model");
 
-const ABONOS_TABLE = "ABONOS";
+const ABONOS_TABLE = "Abonos";
 
 const AbonosSchema = {
   id: {

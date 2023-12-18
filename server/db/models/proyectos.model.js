@@ -49,13 +49,17 @@ const ProjectSchema = {
 }
 
 class Project extends Model {
-  static associate(models){
-    this.belongsToMany(models.Customer, {
-      as: "customer", //osea que un proyecto tiene varios clientes
+  static associate(models) {
+    this.belongsTo(models.Customer, {
+      as: "customer",
       through: models.ProjectCustomer,
-      foreignKey: "project_id",
-      otherKey: "customer_id"
-    })
+      foreignKey: "customerId",
+      otherKey: "projectId",
+    });
+    this.hasMany(models.Abonos, {
+      as: "abonos",
+      foreignKey: "projectId",
+    });
   }
 
   static config(sequelize) {
