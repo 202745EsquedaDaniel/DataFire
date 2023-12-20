@@ -1,6 +1,6 @@
 const { faker } = require('@faker-js/faker');
-const {models} = require("../lib/sequelize")
-const boom = require("@hapi/boom")
+const { models } = require('../lib/sequelize');
+const boom = require('@hapi/boom');
 
 class ProjectService {
   constructor() {
@@ -8,8 +8,8 @@ class ProjectService {
   }
 
   async find() {
-    const rta = await models.Project.findAll()
-    return rta
+    const rta = await models.Project.findAll();
+    return rta;
   }
 
   async findOne(id) {
@@ -19,41 +19,45 @@ class ProjectService {
           model: models.ProjectCustomer,
           as: 'projectCustomers',
         },
-        'abonos'
-      ]
+        'abonos',
+      ],
     });
 
     if (!project) {
-      throw boom.notFound("Project not found");
+      throw boom.notFound('Project not found');
     }
 
     return project;
   }
 
-
   async create(data) {
-    const newProject = await models.Project.create(data)
-    return newProject
+    const newProject = await models.Project.create(data);
+    return newProject;
+  }
+
+  async findCustomerProject() {
+    const rta = await models.ProjectCustomer.findAll();
+    return rta;
   }
 
   async addCustomer(data) {
-    const newCustomer = await models.ProjectCustomer.create(data)
-    return newCustomer
+    const newCustomer = await models.ProjectCustomer.create(data);
+    return newCustomer;
   }
 
-  async update(id, changes){
-    const project = await this.findOne(id)
+  async update(id, changes) {
+    const project = await this.findOne(id);
 
-    const rta = await project.update(changes)
-    return rta
+    const rta = await project.update(changes);
+    return rta;
   }
 
-  async delete(id){
-    const project = await this.findOne(id)
+  async delete(id) {
+    const project = await this.findOne(id);
 
-    await project.destroy()
-    return {id}
-}
+    await project.destroy();
+    return { id };
+  }
 }
 
 module.exports = ProjectService;
