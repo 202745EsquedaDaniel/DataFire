@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/add-cliente', async (req, res, next) => {
+router.get('/add-customer', async (req, res, next) => {
   try {
     const customerProject = await service.findCustomerProject();
     res.json(customerProject);
