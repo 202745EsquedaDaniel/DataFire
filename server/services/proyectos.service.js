@@ -1,6 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const { models } = require('../lib/sequelize');
 const boom = require('@hapi/boom');
+const { addCustomerRESchema } = require('../schemas/proyectos.schema');
 
 class ProjectService {
   constructor() {
@@ -41,10 +42,28 @@ class ProjectService {
   }
 
   async addCustomer(data) {
-    const newCustomer = await models.ProjectCustomer.create(data);
-    return newCustomer;
-  }
+    try {
+      // Validar datos con Joi
+      await addCustomerRESchema.validateAsync(data);
 
+      // Obtener instancias de Project y Customer (puedes realizar consultas a la base de datos)
+      const project = await models.Project.findByPk(data.project_id);
+      const customer = await models.Customer.findByPk(data.customer_id);
+
+      // Crear una nueva instancia de ProjectCustomer con las asociaciones
+      const newCustomer = await models.ProjectCustomer.create({
+        project_id: project.id,
+        customer_id: customer.id,
+        project_name: project.name,
+        customer_name: `${customer.name} ${customer.last_name}`,
+      });
+
+      return newCustomer;
+    } catch (error) {
+      console.error('Error al agregar un cliente:', error);
+      throw error;
+    }
+  }
   async update(id, changes) {
     const project = await this.findOne(id);
 
