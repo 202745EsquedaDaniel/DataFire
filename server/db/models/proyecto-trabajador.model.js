@@ -30,7 +30,7 @@ const ProjectWorkerSchema = {
     onDelete: 'SET NULL',
   },
   worker_id: {
-    field: 'customer_id',
+    field: 'worker_id',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
