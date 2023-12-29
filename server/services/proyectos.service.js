@@ -1,7 +1,10 @@
 const { faker } = require('@faker-js/faker');
 const { models } = require('../lib/sequelize');
 const boom = require('@hapi/boom');
-const { addCustomerRESchema } = require('../schemas/proyectos.schema');
+const {
+  addCustomerRESchema,
+  addWorkerRESchema,
+} = require('../schemas/proyectos.schema');
 
 class ProjectService {
   constructor() {
@@ -108,6 +111,35 @@ class ProjectService {
       throw boom.notFound('ProjectWorker not found');
     }
     return projectWorker;
+  }
+
+  async addProjectWorker(data) {
+    try {
+      await addWorkerRESchema.validateAsync(data);
+
+      // Obtener instancias de Project y Worker
+      const project = await models.Project.findByPk(data.project_id);
+      const worker = await models.Worker.findByPk(data.worker_id);
+
+      // Crear una nueva instancia de ProjectCustomer con las asociaciones
+      const newWorker = await models.ProjectWorker.create({
+        project_id: project.id,
+        worker_id: worker.id,
+        project_name: project.name,
+        worker_name: `${worker.name} ${worker.last_name}`,
+      });
+
+      return newWorker;
+    } catch (error) {
+      console.error('Error al agregar un Trabajador:', error);
+      throw error;
+    }
+  }
+  async deleteProjectCustomer(id) {
+    const projectWorker = await this.findOneProjectWorker(id);
+
+    await projectWorker.destroy();
+    return { id };
   }
 }
 

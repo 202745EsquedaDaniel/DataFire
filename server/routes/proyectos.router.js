@@ -9,6 +9,7 @@ const {
   getProjectSchema,
   updateProjectSchema,
   addCustomerRESchema,
+  addWorkerRESchema,
 } = require('../schemas/proyectos.schema');
 
 router.get('/', async (req, res, next) => {
@@ -146,6 +147,20 @@ router.get(
       const { id } = req.params;
       const projectWorker = await service.findOneProjectWorker(id);
       res.json(projectWorker);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.post(
+  '/projectWorker',
+  validatorHandler(addWorkerRESchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newCustomer = await service.addProjectWorker(body);
+      res.status(201).json(newCustomer);
     } catch (error) {
       next(error);
     }
