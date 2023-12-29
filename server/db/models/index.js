@@ -15,12 +15,12 @@ function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize)),
     Project.init(ProjectSchema, Project.config(sequelize)),
     Worker.init(WorkerSchema, Worker.config(sequelize)),
+    ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize)),
     ProjectCustomer.init(
       ProjectCustomerSchema,
       ProjectCustomer.config(sequelize),
     ),
-    ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize));
-  Abonos.init(AbonosSchema, Abonos.config(sequelize)),
+    Abonos.init(AbonosSchema, Abonos.config(sequelize)),
     Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
 }

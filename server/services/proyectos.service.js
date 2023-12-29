@@ -97,48 +97,17 @@ class ProjectService {
 
   //----------ProjectWorkers Services!-----
   async findProjectWorker() {
-    const rta = await models.projectWorker.findAll();
+    const rta = await models.ProjectWorker.findAll();
     return rta;
   }
 
-  async findOneProjectCustomer(id) {
-    const projectCustomer = await models.ProjectCustomer.findByPk(id, {});
+  async findOneProjectWorker(id) {
+    const projectWorker = await models.ProjectCustomer.findByPk(id, {});
 
-    if (!projectCustomer) {
-      throw boom.notFound('ProjectCustomer not found');
+    if (!projectWorker) {
+      throw boom.notFound('ProjectWorker not found');
     }
-
-    return projectCustomer;
-  }
-
-  async addCustomer(data) {
-    try {
-      // Validar datos con Joi
-      await addCustomerRESchema.validateAsync(data);
-
-      // Obtener instancias de Project y Customer (puedes realizar consultas a la base de datos)
-      const project = await models.Project.findByPk(data.project_id);
-      const customer = await models.Customer.findByPk(data.customer_id);
-
-      // Crear una nueva instancia de ProjectCustomer con las asociaciones
-      const newCustomer = await models.ProjectCustomer.create({
-        project_id: project.id,
-        customer_id: customer.id,
-        project_name: project.name,
-        customer_name: `${customer.name} ${customer.last_name}`,
-      });
-
-      return newCustomer;
-    } catch (error) {
-      console.error('Error al agregar un cliente:', error);
-      throw error;
-    }
-  }
-  async deleteProjectCustomer(id) {
-    const project = await this.findOneProjectCustomer(id);
-
-    await project.destroy();
-    return { id };
+    return projectWorker;
   }
 }
 

@@ -137,4 +137,19 @@ router.get('/projectWorker', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get(
+  '/projectWorker/:id',
+  validatorHandler(getProjectSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const projectWorker = await service.findOneProjectWorker(id);
+      res.json(projectWorker);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 module.exports = router;
