@@ -30,6 +30,15 @@ router.get('/projectCustomer', async (req, res, next) => {
   }
 });
 
+router.get('/projectWorker', async (req, res, next) => {
+  try {
+    const projectWorkers = await service.findProjectsWorkers();
+    res.json(projectWorkers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get(
   '/projectCustomer/:id',
   validatorHandler(getProjectSchema, 'params'),
@@ -130,15 +139,7 @@ router.delete(
 );
 
 //------ProjectWorkers Router
-router.get('/projectWorker', async (req, res, next) => {
-  try {
-    const projectWorkers = await service.findProjectsWorkers();
-    res.json(projectWorkers);
-  } catch (error) {
-    next(error);
-  }
-});
-
+// puse el get all arriba por que estaba teniendo problemas de asincronismo
 router.get(
   '/projectWorker/:id',
   validatorHandler(getProjectSchema, 'params'),
