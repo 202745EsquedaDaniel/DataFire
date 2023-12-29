@@ -132,8 +132,8 @@ router.delete(
 //------ProjectWorkers Router
 router.get('/projectWorker', async (req, res, next) => {
   try {
-    const projectWorker = await service.findProjectWorker();
-    res.json(projectWorker);
+    const projectWorkers = await service.findProjectsWorkers();
+    res.json(projectWorkers);
   } catch (error) {
     next(error);
   }
@@ -161,6 +161,20 @@ router.post(
       const body = req.body;
       const newCustomer = await service.addProjectWorker(body);
       res.status(201).json(newCustomer);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.delete(
+  '/projectWorker/:id',
+  validatorHandler(getProjectSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.deleteProjectWorker(id);
+      res.status(201).json({ id });
     } catch (error) {
       next(error);
     }

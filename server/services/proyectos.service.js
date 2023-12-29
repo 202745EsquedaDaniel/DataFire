@@ -99,13 +99,13 @@ class ProjectService {
   }
 
   //----------ProjectWorkers Services!-----
-  async findProjectWorker() {
+  async findProjectsWorkers() {
     const rta = await models.ProjectWorker.findAll();
     return rta;
   }
 
   async findOneProjectWorker(id) {
-    const projectWorker = await models.ProjectCustomer.findByPk(id, {});
+    const projectWorker = await models.ProjectWorker.findByPk(id, {});
 
     if (!projectWorker) {
       throw boom.notFound('ProjectWorker not found');
@@ -135,9 +135,8 @@ class ProjectService {
       throw error;
     }
   }
-  async deleteProjectCustomer(id) {
+  async deleteProjectWorker(id) {
     const projectWorker = await this.findOneProjectWorker(id);
-
     await projectWorker.destroy();
     return { id };
   }
