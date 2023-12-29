@@ -128,4 +128,13 @@ router.delete(
   },
 );
 
+//------ProjectWorkers Router
+router.get('/projectWorker', async (req, res, next) => {
+  try {
+    const projectWorker = await service.findProjectWorker();
+    res.json(projectWorker);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
