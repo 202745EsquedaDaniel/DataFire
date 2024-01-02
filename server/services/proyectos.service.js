@@ -140,6 +140,45 @@ class ProjectService {
     await projectWorker.destroy();
     return { id };
   }
+
+  //----------Costos Services!-----
+  async findServices() {
+    const rta = await models.Service.findAll();
+    return rta;
+  }
+
+  async findOneService(id) {
+    const service = await models.Service.findByPk(id, {});
+
+    if (!service) {
+      throw boom.notFound('Service not found');
+    }
+    return service;
+  }
+
+  async addService(data) {
+    try {
+      await addWorkerRESchema.validateAsync(data);
+
+      // Obtener instancias de Project
+      const project = await models.Project.findByPk(data.project_id);
+
+      // Crear una nueva instancia de service con las asociaciones
+      const service = await models.Service.create({
+        project_id: project.id,
+      });
+
+      return service;
+    } catch (error) {
+      console.error('Error al agregar un Servicio:', error);
+      throw error;
+    }
+  }
+  async deleteSerice(id) {
+    const service = await this.findOneService(id);
+    await service.destroy();
+    return { id };
+  }
 }
 
 module.exports = ProjectService;
