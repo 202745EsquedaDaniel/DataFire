@@ -4,6 +4,7 @@ const boom = require('@hapi/boom');
 const {
   addCustomerRESchema,
   addWorkerRESchema,
+  addServiceSchema,
 } = require('../schemas/proyectos.schema');
 
 class ProjectService {
@@ -156,24 +157,11 @@ class ProjectService {
     return service;
   }
 
-  async addService(data) {
-    try {
-      await addWorkerRESchema.validateAsync(data);
-
-      // Obtener instancias de Project
-      const project = await models.Project.findByPk(data.project_id);
-
-      // Crear una nueva instancia de service con las asociaciones
-      const service = await models.Service.create({
-        project_id: project.id,
-      });
-
-      return service;
-    } catch (error) {
-      console.error('Error al agregar un Servicio:', error);
-      throw error;
-    }
+  async createService(data) {
+    const newService = await models.Service.create(data);
+    return newService;
   }
+
   async deleteSerice(id) {
     const service = await this.findOneService(id);
     await service.destroy();
