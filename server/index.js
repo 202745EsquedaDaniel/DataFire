@@ -51,7 +51,11 @@ async function runInitializationScript() {
   }
 }
 
-runInitializationScript();
+try {
+  runInitializationScript();
+} catch (error) {
+  console.error('Error en la inicialización:', error);
+}
 
 routerApi(app);
 

@@ -3,6 +3,8 @@ RETURNS VOID AS $$
 DECLARE
   currentCost INT;
 BEGIN
+  RAISE NOTICE 'Calling UpdateProjectCost for Project ID: % with Service Cost: %', projectId, serviceCost;
+
   -- Obtener el costo actual del proyecto
   SELECT costo INTO currentCost FROM proyectos WHERE id = projectId;
 
