@@ -24,7 +24,12 @@ class ProjectService {
           model: models.ProjectCustomer,
           as: 'projectCustomers',
         },
+        {
+          model: models.ProjectWorker,
+          as: 'projectWorkers',
+        },
         'abonos',
+        'services',
       ],
     });
 
