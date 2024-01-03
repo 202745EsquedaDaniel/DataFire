@@ -67,7 +67,6 @@ class Project extends Model {
       foreignKey: 'project_id',
     });
   }
-
   static config(sequelize) {
     return {
       sequelize,
@@ -75,11 +74,6 @@ class Project extends Model {
       modelname: 'project',
       timestamps: false,
     };
-  }
-
-  async updateTotalCost(amount) {
-    this.costo += amount;
-    await this.save();
   }
 }
 

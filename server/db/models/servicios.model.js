@@ -52,18 +52,6 @@ class Service extends Model {
     });
   }
 
-  static init(sequelize) {
-    super.init(ServiceSchema, {
-      sequelize,
-      hooks: {
-        afterCreate: async (service, options) => {
-          const project = await models.Project.findByPk(service.project_id);
-          await project.updateTotalCost(service.cost);
-        },
-      },
-    });
-  }
-
   static config(sequelize) {
     return {
       sequelize,
