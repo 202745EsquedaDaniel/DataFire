@@ -228,7 +228,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      await service.deleteProjectWorker(id);
+      await service.deleteService(id);
       res.status(201).json({ id });
     } catch (error) {
       next(error);

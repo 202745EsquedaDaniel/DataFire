@@ -171,9 +171,19 @@ class ProjectService {
     return newService;
   }
 
-  async deleteSerice(id) {
+  async deleteService(id) {
     const service = await this.findOneService(id);
+    const projectId = service.project_id;
+
+    // Antes de eliminar el servicio, obtén el costo del proyecto
+    const project = await models.Project.findByPk(projectId);
+    const initialProjectCost = project.costo;
+
     await service.destroy();
+
+    // Después de eliminar el servicio, actualiza el costo total del proyecto
+    await this.updateProjectTotalCost(projectId, initialProjectCost);
+
     return { id };
   }
 
