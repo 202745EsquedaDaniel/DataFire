@@ -164,6 +164,10 @@ class ProjectService {
 
   async createService(data) {
     const newService = await models.Service.create(data);
+
+    // Después de crear el servicio, actualiza el costo total del proyecto
+    await this.updateProjectTotalCost(newService.project_id);
+
     return newService;
   }
 
@@ -171,6 +175,23 @@ class ProjectService {
     const service = await this.findOneService(id);
     await service.destroy();
     return { id };
+  }
+
+  async updateProjectTotalCost(projectId) {
+    const project = await models.Project.findByPk(projectId);
+
+    if (project) {
+      // Calcula la suma total de los costos de los servicios asociados al proyecto
+      const totalCostOfServices = await models.Service.sum('cost', {
+        where: { project_id: projectId },
+      });
+
+      // Si es el primer servicio, agrega el costo inicial del proyecto
+      const totalCost = totalCostOfServices + project.costo;
+
+      // Actualiza el costo total del proyecto
+      await project.update({ costo: totalCost || 0 });
+    }
   }
 }
 
