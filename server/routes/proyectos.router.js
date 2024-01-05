@@ -200,7 +200,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const projectWorker = await service.findOneProjectWorker(id);
+      const projectWorker = await service.findOneService(id);
       res.json(projectWorker);
     } catch (error) {
       next(error);
