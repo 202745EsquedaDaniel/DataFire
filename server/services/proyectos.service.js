@@ -162,6 +162,13 @@ class ProjectService {
     return service;
   }
 
+  async updateCost(id, changes) {
+    const cost = await this.findOneService(id);
+
+    const rta = await cost.update(changes);
+    return rta;
+  }
+
   async createService(data) {
     const newService = await models.Service.create(data);
 

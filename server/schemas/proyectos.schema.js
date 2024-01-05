@@ -42,11 +42,21 @@ const addWorkerRESchema = Joi.object({
   worker_id: worker_id.required(),
 });
 // ====Servie Schemas----
+const getCostSchema = Joi.object({
+  id: id.required(),
+});
 const addServiceSchema = Joi.object({
   project_id: project_id.required(),
   amount: amount.required(),
   service: service.required(),
   cost: cost.required(),
+});
+
+const updateCostsSchema = Joi.object({
+  id: id,
+  amount: amount,
+  service: service,
+  cost: cost,
 });
 
 module.exports = {
@@ -56,4 +66,6 @@ module.exports = {
   addCustomerRESchema,
   addWorkerRESchema,
   addServiceSchema,
+  getCostSchema,
+  updateCostsSchema,
 };

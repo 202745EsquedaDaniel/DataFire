@@ -11,6 +11,8 @@ const {
   addCustomerRESchema,
   addWorkerRESchema,
   addServiceSchema,
+  getCostSchema,
+  updateCostsSchema,
 } = require('../schemas/proyectos.schema');
 
 router.get('/', async (req, res, next) => {
@@ -216,6 +218,22 @@ router.post(
       const body = req.body;
       const newService = await service.createService(body);
       res.status(201).json(newService);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.patch(
+  '/services/:id',
+  validatorHandler(getCostSchema, 'params'),
+  validatorHandler(updateCostsSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const { id } = req.params;
+      const cost = service.updateCost(id, body);
+      res.json(cost);
     } catch (error) {
       next(error);
     }
