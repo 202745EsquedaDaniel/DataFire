@@ -23,7 +23,18 @@ const ProjectSchema = {
     allowNull: false,
     type: DataTypes.DATE,
   },
+  costo_inicial: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
   costo: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: function () {
+      return this.getDataValue('costo_inicial');
+    },
+  },
+  abonado: {
     allowNull: false,
     type: DataTypes.INTEGER,
     defaultValue: 0,
