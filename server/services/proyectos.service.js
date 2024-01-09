@@ -55,8 +55,22 @@ class ProjectService {
   }
 
   async create(data) {
-    const newProject = await models.Project.create(data);
-    return newProject;
+    try {
+      // Obtener el valor predeterminado de costo_inicial del esquema
+      const defaultInitialCost = ProjectSchema.costo_inicial.defaultValue;
+
+      // Establecer el valor predeterminado de costo_inicial como costo al crear el proyecto
+      const newProjectData = {
+        ...data,
+        costo: data.costo || defaultInitialCost,
+      };
+
+      const newProject = await models.Project.create(newProjectData);
+      return newProject;
+    } catch (error) {
+      console.error('Error al crear un proyecto:', error);
+      throw error;
+    }
   }
   // ---------ProjectCustomers Service!-------
   async findCustomersProjects() {

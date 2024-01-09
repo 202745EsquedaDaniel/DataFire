@@ -26,6 +26,7 @@ const ProjectSchema = {
   costo_inicial: {
     allowNull: false,
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
   costo: {
     allowNull: false,
