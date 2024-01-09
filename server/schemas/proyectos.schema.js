@@ -11,12 +11,14 @@ const worker_id = Joi.number().integer();
 const cost = Joi.number().integer();
 const amount = Joi.number().integer();
 const service = Joi.string();
+const costo_inicial = Joi.number().integer();
+const abonado = Joi.string();
 
 const createProjectsSchema = Joi.object({
   name: name.required(),
   fecha_inicio: fecha_inicio.required(),
   fecha_fin: fecha_fin.required(),
-  costo: costo.required(),
+  costo_inicial: costo_inicial.required(),
 });
 
 const updateProjectSchema = Joi.object({

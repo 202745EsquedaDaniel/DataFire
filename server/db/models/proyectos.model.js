@@ -30,9 +30,7 @@ const ProjectSchema = {
   costo: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    defaultValue: function () {
-      return this.getDataValue('costo_inicial');
-    },
+    defaultValue: 0,
   },
   abonado: {
     allowNull: false,
