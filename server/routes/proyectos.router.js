@@ -51,6 +51,15 @@ router.get('/services', async (req, res, next) => {
   }
 });
 
+router.get('/abonos', async (req, res, next) => {
+  try {
+    const abonos = await service.findAbonos();
+    res.json(abonos);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get(
   '/projectCustomer/:id',
   validatorHandler(getProjectSchema, 'params'),
@@ -150,7 +159,7 @@ router.delete(
   },
 );
 
-//------ProjectWorkers Router
+/**---------------------------------------ProjectWorkers--------------------------------------------------------- */
 // puse el get all arriba por que estaba teniendo problemas de asincronismo
 router.get(
   '/projectWorker/:id',
@@ -194,7 +203,7 @@ router.delete(
   },
 );
 
-//------Services Router
+/**---------------------------------------Services Rouder--------------------------------------------------------- */
 // puse el get all arriba por que estaba teniendo problemas de asincronismo
 router.get(
   '/services/:id',
@@ -253,5 +262,7 @@ router.delete(
     }
   },
 );
+
+/**--------------------Abonos router---------------------------------------------------------------------------- */
 
 module.exports = router;

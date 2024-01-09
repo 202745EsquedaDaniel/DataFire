@@ -224,6 +224,38 @@ class ProjectService {
       await project.update({ costo: totalCost || 0 });
     }
   }
+
+  /**--------------Abonos--------------------- */
+  async findAbonos() {
+    const rta = await models.Abonos.findAll();
+    return rta;
+  }
+
+  async findOneAbono(id) {
+    const abono = await models.Abonos.findByPk(id, {});
+
+    if (!abono) {
+      throw boom.notFound('Abono not found');
+    }
+    return abono;
+  }
+
+  async updateAbono(id, changes) {
+    const abono = await this.findOneAbono(id);
+    const rta = await abono.update(changes);
+    return rta;
+  }
+
+  async create(data) {
+    const newAbono = await models.Abonos.create(data);
+    return newAbono;
+  }
+
+  async deleteAbono(id) {
+    const Abono = await this.findOneAbono(id);
+    await Abono.destroy();
+    return { id };
+  }
 }
 
 module.exports = ProjectService;
