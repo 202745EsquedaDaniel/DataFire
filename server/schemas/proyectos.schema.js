@@ -13,6 +13,11 @@ const amount = Joi.number().integer();
 const service = Joi.string();
 const costo_inicial = Joi.number().integer();
 const abonado = Joi.string();
+/** ----Abonos-- */
+const monto = Joi.number().integer();
+const fecha_abono = Joi.date();
+const projectId = Joi.number().integer();
+const customerId = Joi.number().integer();
 
 const createProjectsSchema = Joi.object({
   name: name.required(),
@@ -61,6 +66,25 @@ const updateCostsSchema = Joi.object({
   cost: cost,
 });
 
+/** Abonos Schemas */
+const getAbonoSchema = Joi.object({
+  id: id.required(),
+});
+const addAbonoSchema = Joi.object({
+  monto: monto.required(),
+  fecha_abono: fecha_abono.required(),
+  projectId: projectId.required(),
+  customerId: customerId.required(),
+});
+
+const updateAbonoSchema = Joi.object({
+  id: id,
+  monto: monto,
+  fecha_abono: fecha_abono,
+  projectId: projectId,
+  customerId: customerId,
+});
+
 module.exports = {
   createProjectsSchema,
   updateProjectSchema,
@@ -70,4 +94,7 @@ module.exports = {
   addServiceSchema,
   getCostSchema,
   updateCostsSchema,
+  getAbonoSchema,
+  updateAbonoSchema,
+  addAbonoSchema,
 };

@@ -264,5 +264,62 @@ router.delete(
 );
 
 /**--------------------Abonos router---------------------------------------------------------------------------- */
+router.get(
+  '/abonos/:id',
+  validatorHandler(getProjectSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const abono = await service.findOneAbono(id);
+      res.json(abono);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.post(
+  '/services',
+  validatorHandler(addServiceSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const abono = await service.createAbono(body);
+      res.status(201).json(abono);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.patch(
+  '/abonos/:id',
+  validatorHandler(getCostSchema, 'params'),
+  validatorHandler(updateCostsSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const { id } = req.params;
+      const cost = service.updateAbono(id, body);
+      res.json(cost);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.delete(
+  '/abonos/:id',
+  validatorHandler(getProjectSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.deleteService(id);
+      res.status(201).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 module.exports = router;

@@ -246,7 +246,7 @@ class ProjectService {
     return rta;
   }
 
-  async create(data) {
+  async createAbono(data) {
     const newAbono = await models.Abonos.create(data);
     return newAbono;
   }
