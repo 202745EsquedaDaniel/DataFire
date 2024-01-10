@@ -13,6 +13,9 @@ const {
   addServiceSchema,
   getCostSchema,
   updateCostsSchema,
+  addAbonoSchema,
+  getAbonoSchema,
+  updateAbonoSchema,
 } = require('../schemas/proyectos.schema');
 
 router.get('/', async (req, res, next) => {
@@ -279,8 +282,8 @@ router.get(
 );
 
 router.post(
-  '/services',
-  validatorHandler(addServiceSchema, 'body'),
+  '/abonos',
+  validatorHandler(addAbonoSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -294,8 +297,8 @@ router.post(
 
 router.patch(
   '/abonos/:id',
-  validatorHandler(getCostSchema, 'params'),
-  validatorHandler(updateCostsSchema, 'body'),
+  validatorHandler(getAbonoSchema, 'params'),
+  validatorHandler(updateAbonoSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -310,11 +313,11 @@ router.patch(
 
 router.delete(
   '/abonos/:id',
-  validatorHandler(getProjectSchema, 'params'),
+  validatorHandler(getAbonoSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      await service.deleteService(id);
+      await service.deleteAbono(id);
       res.status(201).json({ id });
     } catch (error) {
       next(error);
