@@ -243,15 +243,37 @@ class ProjectService {
   async updateAbono(id, changes) {
     const abono = await this.findOneAbono(id);
     const rta = await abono.update(changes);
+
+    // Lógica para actualizar el monto abonado en el proyecto correspondiente
+    const nuevoMontoAbono = changes.monto || 0; // Ajusta según tu estructura de datos
+    const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
+
+    try {
+      await models.sequelize.query(
+        'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+        {
+          replacements: {
+            nuevo_monto: nuevoMontoAbono,
+            proyecto_id: proyectoId,
+          },
+          type: models.sequelize.QueryTypes.RAW,
+        },
+      );
+
+      console.log('Monto abonado actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el monto abonado:', error);
+    }
+
     return rta;
   }
 
   async createAbono(data) {
     const newAbono = await models.Abonos.create(data);
 
-    // Después de insertar un nuevo abono, llamar al procedimiento almacenado
-    const nuevoMontoAbono = data.monto; // Usa el monto del nuevo abono
-    const proyectoId = data.projectId; // Usa el ID del proyecto correspondiente
+    // Lógica para actualizar el monto abonado en el proyecto correspondiente
+    const nuevoMontoAbono = data.monto || 0; // Ajusta según tu estructura de datos
+    const proyectoId = data.projectId; // Ajusta según tu estructura de datos
 
     try {
       await models.sequelize.query(
@@ -276,6 +298,28 @@ class ProjectService {
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
     await abono.destroy();
+
+    // Lógica para actualizar el monto abonado en el proyecto correspondiente
+    const nuevoMontoAbono = 0; // Se asume que se restablece a cero al eliminar el abono
+    const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
+
+    try {
+      await models.sequelize.query(
+        'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+        {
+          replacements: {
+            nuevo_monto: nuevoMontoAbono,
+            proyecto_id: proyectoId,
+          },
+          type: models.sequelize.QueryTypes.RAW,
+        },
+      );
+
+      console.log('Monto abonado actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el monto abonado:', error);
+    }
+
     return { id };
   }
 }
