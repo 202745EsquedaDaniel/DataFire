@@ -248,12 +248,34 @@ class ProjectService {
 
   async createAbono(data) {
     const newAbono = await models.Abonos.create(data);
+
+    // Después de insertar un nuevo abono, llamar al procedimiento almacenado
+    const nuevoMontoAbono = data.monto; // Usa el monto del nuevo abono
+    const proyectoId = data.projectId; // Usa el ID del proyecto correspondiente
+
+    try {
+      await models.sequelize.query(
+        'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+        {
+          replacements: {
+            nuevo_monto: nuevoMontoAbono,
+            proyecto_id: proyectoId,
+          },
+          type: models.sequelize.QueryTypes.RAW,
+        },
+      );
+
+      console.log('Monto abonado actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el monto abonado:', error);
+    }
+
     return newAbono;
   }
 
   async deleteAbono(id) {
-    const Abono = await this.findOneAbono(id);
-    await Abono.destroy();
+    const abono = await this.findOneAbono(id);
+    await abono.destroy();
     return { id };
   }
 }
