@@ -1,5 +1,6 @@
 const { faker } = require('@faker-js/faker');
 const { models } = require('../lib/sequelize');
+const { Abonos } = require('../db/models/abonos.model');
 const boom = require('@hapi/boom');
 const {
   addCustomerRESchema,
@@ -249,14 +250,15 @@ class ProjectService {
     const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
 
     try {
-      await models.sequelize.query(
+      // Acceder a la instancia de Sequelize a través del modelo Abonos
+      await Abonos.sequelize.query(
         'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
         {
           replacements: {
             nuevo_monto: nuevoMontoAbono,
             proyecto_id: proyectoId,
           },
-          type: models.sequelize.QueryTypes.RAW,
+          type: Abonos.sequelize.QueryTypes.RAW,
         },
       );
 
@@ -269,21 +271,22 @@ class ProjectService {
   }
 
   async createAbono(data) {
-    const newAbono = await models.Abonos.create(data);
+    const newAbono = await Abonos.create(data);
 
     // Lógica para actualizar el monto abonado en el proyecto correspondiente
     const nuevoMontoAbono = data.monto || 0; // Ajusta según tu estructura de datos
     const proyectoId = data.projectId; // Ajusta según tu estructura de datos
 
     try {
-      await models.sequelize.query(
+      // Acceder a la instancia de Sequelize a través del modelo Abonos
+      await Abonos.sequelize.query(
         'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
         {
           replacements: {
             nuevo_monto: nuevoMontoAbono,
             proyecto_id: proyectoId,
           },
-          type: models.sequelize.QueryTypes.RAW,
+          type: Abonos.sequelize.QueryTypes.RAW,
         },
       );
 
@@ -304,14 +307,15 @@ class ProjectService {
     const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
 
     try {
-      await models.sequelize.query(
+      // Acceder a la instancia de Sequelize a través del modelo Abonos
+      await Abonos.sequelize.query(
         'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
         {
           replacements: {
             nuevo_monto: nuevoMontoAbono,
             proyecto_id: proyectoId,
           },
-          type: models.sequelize.QueryTypes.RAW,
+          type: Abonos.sequelize.QueryTypes.RAW,
         },
       );
 

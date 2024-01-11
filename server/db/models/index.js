@@ -13,17 +13,18 @@ const {
 const { Abonos, AbonosSchema } = require('./abonos.model');
 
 function setupModels(sequelize) {
-  Customer.init(CustomerSchema, Customer.config(sequelize)),
-    Project.init(ProjectSchema, Project.config(sequelize)),
-    Worker.init(WorkerSchema, Worker.config(sequelize)),
-    Service.init(ServiceSchema, Service.config(sequelize));
-  ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize)),
-    ProjectCustomer.init(
-      ProjectCustomerSchema,
-      ProjectCustomer.config(sequelize),
-    ),
-    Abonos.init(AbonosSchema, Abonos.config(sequelize)),
-    Project.associate(sequelize.models);
+  Customer.init(CustomerSchema, Customer.config(sequelize));
+  Project.init(ProjectSchema, Project.config(sequelize));
+  Worker.init(WorkerSchema, Worker.config(sequelize));
+  Service.init(ServiceSchema, Service.config(sequelize));
+  ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize));
+  ProjectCustomer.init(
+    ProjectCustomerSchema,
+    ProjectCustomer.config(sequelize),
+  ),
+    Abonos.init(AbonosSchema, Abonos.config(sequelize));
+
+  Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
 }
 
