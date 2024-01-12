@@ -38,6 +38,11 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  remaining: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
   customerId: {
     field: 'customer_id',
     allowNull: false,
