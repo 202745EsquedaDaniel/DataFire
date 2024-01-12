@@ -278,15 +278,15 @@ class ProjectService {
     const proyectoId = data.projectId; // Ajusta según tu estructura de datos
 
     try {
-      // Acceder a la instancia de Sequelize a través del modelo Abonos
+      // Cambia la llamada de CALL a SELECT para invocar la función almacenada
       await Abonos.sequelize.query(
-        'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+        'SELECT actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
         {
           replacements: {
             nuevo_monto: nuevoMontoAbono,
             proyecto_id: proyectoId,
           },
-          type: Abonos.sequelize.QueryTypes.RAW,
+          type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
 
