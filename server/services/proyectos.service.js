@@ -202,13 +202,10 @@ class ProjectService {
 
     return newService;
   }
-
-  // En tu lógica de negocio para eliminar un servicio
   async deleteService(id) {
     const service = await this.findOneService(id);
     const projectId = service.project_id;
 
-    // Antes de eliminar el servicio, obtén el costo del servicio
     const costoServicio = service.cost;
 
     await service.destroy();
@@ -262,8 +259,8 @@ class ProjectService {
     const rta = await abono.update(changes);
 
     // Lógica para actualizar el monto abonado en el proyecto correspondiente
-    const nuevoMontoAbono = changes.monto || 0; // Ajusta según tu estructura de datos
-    const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
+    const nuevoMontoAbono = changes.monto || 0;
+    const proyectoId = abono.projectId;
 
     try {
       // Acceder a la instancia de Sequelize a través del modelo Abonos
