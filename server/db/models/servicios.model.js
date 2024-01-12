@@ -60,14 +60,6 @@ class Service extends Model {
       timestamps: false,
     };
   }
-
-  static async afterCreate(serviceInstance, options) {
-    const project = await serviceInstance.getProject();
-    if (project) {
-      const totalCost = project.costo + serviceInstance.cost;
-      await project.update({ costo: totalCost }, options);
-    }
-  }
 }
 
 module.exports = {

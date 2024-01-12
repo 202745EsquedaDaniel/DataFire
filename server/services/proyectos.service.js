@@ -187,24 +187,39 @@ class ProjectService {
   async createService(data) {
     const newService = await models.Service.create(data);
 
-    // Después de crear el servicio, actualiza el costo total del proyecto
-    await this.updateProjectTotalCost(newService.project_id);
+    // Llamada a la función que actualiza el costo total del proyecto al insertar un servicio
+    await models.Service.sequelize.query(
+      'SELECT actualizar_costo_proyecto_al_insertar_servicio(:cost, :project_id)',
+      {
+        replacements: {
+          cost: newService.cost,
+          project_id: newService.project_id,
+        },
+        type: models.Service.sequelize.QueryTypes.SELECT,
+      },
+    );
 
     return newService;
   }
 
+  // En tu lógica de negocio para eliminar un servicio
   async deleteService(id) {
     const service = await this.findOneService(id);
     const projectId = service.project_id;
 
-    // Antes de eliminar el servicio, obtén el costo del proyecto
-    const project = await models.Project.findByPk(projectId);
-    const initialProjectCost = project.costo;
+    // Antes de eliminar el servicio, obtén el costo del servicio
+    const costoServicio = service.cost;
 
     await service.destroy();
 
-    // Después de eliminar el servicio, actualiza el costo total del proyecto
-    await this.updateProjectTotalCost(projectId, initialProjectCost);
+    // Llamada a la función que actualiza el costo total del proyecto al eliminar un servicio
+    await models.Service.sequelize.query(
+      'SELECT actualizar_costo_proyecto_al_eliminar_servicio(:cost, :project_id)',
+      {
+        replacements: { cost: costoServicio, project_id: projectId },
+        type: models.Service.sequelize.QueryTypes.SELECT,
+      },
+    );
 
     return { id };
   }
