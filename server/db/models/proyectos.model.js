@@ -82,6 +82,17 @@ class Project extends Model {
       foreignKey: 'project_id',
     });
   }
+
+  static init(attributes, options) {
+    super.init(attributes, options);
+
+    this.addHook('beforeUpdate', (project, options) => {
+      project.remaining = project.costo - project.abonado;
+    });
+
+    return this;
+  }
+
   static config(sequelize) {
     return {
       sequelize,
