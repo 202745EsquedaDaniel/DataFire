@@ -7,6 +7,7 @@ const {
   addWorkerRESchema,
   addServiceSchema,
 } = require('../schemas/proyectos.schema');
+const { ProjectSchema } = require('../db/models/proyectos.model');
 
 class ProjectService {
   constructor() {

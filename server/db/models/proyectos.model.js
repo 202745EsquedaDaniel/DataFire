@@ -53,7 +53,7 @@ const ProjectSchema = {
     },
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
-    defaultValue: 0,
+    defaultValue: 1,
   },
   createdAt: {
     allowNull: false,
