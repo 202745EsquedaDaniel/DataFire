@@ -19,6 +19,7 @@ function setupModels(sequelize) {
   Worker.init(WorkerSchema, Worker.config(sequelize));
   Service.init(ServiceSchema, Service.config(sequelize));
   ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize));
+  User.init(UserSchema, User.config(sequelize));
   ProjectCustomer.init(
     ProjectCustomerSchema,
     ProjectCustomer.config(sequelize),
