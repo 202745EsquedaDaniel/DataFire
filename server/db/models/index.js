@@ -2,6 +2,7 @@ const { Customer, CustomerSchema } = require('./cliente.model');
 const { Project, ProjectSchema } = require('./proyectos.model');
 const { Worker, WorkerSchema } = require('./trabajadores.model');
 const { Service, ServiceSchema } = require('./servicios.model');
+const { User, UserSchema } = require('./users.model');
 const {
   ProjectCustomer,
   ProjectCustomerSchema,
