@@ -4,6 +4,7 @@ const WorkerService = require('../services/trabajadores.service');
 const service = new WorkerService();
 const passport = require('passport');
 const validatorHandler = require('../middlewares/validator.handler');
+const { checkRoles } = require('../middlewares/auth.handler');
 const {
   createWorkerSchema,
   getWorkerSchema,
@@ -36,6 +37,7 @@ router.get(
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
