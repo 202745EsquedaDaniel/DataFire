@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const WorkerService = require('../services/trabajadores.service');
 const service = new WorkerService();
-
+const passport = require('passport');
 const validatorHandler = require('../middlewares/validator.handler');
 const {
   createWorkerSchema,
   getWorkerSchema,
-  updateWorkerSchema
+  updateWorkerSchema,
 } = require('../schemas/trabajadores.schema');
 
 router.get('/', async (req, res, next) => {
@@ -35,6 +35,7 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
