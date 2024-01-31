@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ProjectService = require('../services/proyectos.service');
 const service = new ProjectService();
+const { models } = require('../lib/sequelize');
 
 const validatorHandler = require('../middlewares/validator.handler');
 const {
@@ -60,6 +61,17 @@ router.get('/abonos', async (req, res, next) => {
     res.json(abonos);
   } catch (error) {
     next(error);
+  }
+});
+
+router.get('/project-stats', async (req, res) => {
+  try {
+    const totalProjects = await models.Project.getTotalProjects();
+    const projectsByMonth = await models.Project.getProjectsByMonth();
+
+    res.json({ totalProjects, projectsByMonth });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

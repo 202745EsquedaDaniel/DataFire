@@ -2,6 +2,8 @@ const { Model, DataTypes, Sequelize } = require('sequelize');
 
 const { CUSTOMER_TABLE } = require('./cliente.model');
 
+const { Op } = require('sequelize');
+
 const PROJECT_TABLE = 'proyectos';
 
 const ProjectSchema = {
@@ -90,6 +92,50 @@ class Project extends Model {
       modelname: 'project',
       timestamps: false,
     };
+  }
+
+  static async getTotalProjects() {
+    try {
+      const totalProjects = await this.count();
+      return totalProjects;
+    } catch (error) {
+      console.error('Error fetching total projects:', error);
+      throw error;
+    }
+  }
+
+  static async getProjectsByMonth() {
+    try {
+      const currentDate = new Date();
+      const twelveMonthsAgo = new Date(currentDate);
+      twelveMonthsAgo.setMonth(currentDate.getMonth() - 12);
+
+      const projectsByMonth = await this.findAll({
+        attributes: [
+          [
+            Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+            'month',
+          ],
+          [Sequelize.fn('count', Sequelize.col('*')), 'projectCount'],
+        ],
+        where: {
+          fecha_inicio: {
+            [Op.between]: [twelveMonthsAgo, currentDate],
+          },
+        },
+        group: [
+          Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+        ],
+        order: [
+          Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+        ],
+      });
+
+      return projectsByMonth;
+    } catch (error) {
+      console.error('Error fetching projects by month:', error);
+      throw error;
+    }
   }
 }
 

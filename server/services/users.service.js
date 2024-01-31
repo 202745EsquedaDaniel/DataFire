@@ -13,8 +13,10 @@ class UserService {
   }
 
   async findUsers() {
-    const rta = await models.User.findAll();
-    return rta;
+    const users = await models.User.findAll({
+      attributes: ['id', 'name', 'email', 'role'],
+    });
+    return users;
   }
 
   //Esto solo es para la autentificacion
