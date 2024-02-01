@@ -137,6 +137,40 @@ class Project extends Model {
       throw error;
     }
   }
+
+  static async getExpensesByMonth() {
+    try {
+      const currentDate = new Date();
+      const twelveMonthsAgo = new Date(currentDate);
+      twelveMonthsAgo.setMonth(currentDate.getMonth() - 12);
+
+      const expensesByMonth = await this.findAll({
+        attributes: [
+          [
+            Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+            'month',
+          ],
+          [Sequelize.fn('sum', Sequelize.col('costo')), 'totalExpense'],
+        ],
+        where: {
+          fecha_inicio: {
+            [Op.between]: [twelveMonthsAgo, currentDate],
+          },
+        },
+        group: [
+          Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+        ],
+        order: [
+          Sequelize.fn('date_trunc', 'month', Sequelize.col('fecha_inicio')),
+        ],
+      });
+
+      return expensesByMonth;
+    } catch (error) {
+      console.error('Error fetching expenses by month:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = { PROJECT_TABLE, ProjectSchema, Project };

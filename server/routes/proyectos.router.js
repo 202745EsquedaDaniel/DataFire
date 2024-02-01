@@ -68,8 +68,9 @@ router.get('/project-stats', async (req, res) => {
   try {
     const totalProjects = await models.Project.getTotalProjects();
     const projectsByMonth = await models.Project.getProjectsByMonth();
+    const CostsByMonth = await models.Project.getExpensesByMonth();
 
-    res.json({ totalProjects, projectsByMonth });
+    res.json({ totalProjects, projectsByMonth, CostsByMonth });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
