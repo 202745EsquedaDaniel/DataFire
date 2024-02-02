@@ -91,6 +91,11 @@ class Project extends Model {
       tableName: PROJECT_TABLE,
       modelname: 'project',
       timestamps: false,
+      hooks: {
+        beforeCreate: async (project, options) => {
+          project.costo = project.costo_inicial;
+        },
+      },
     };
   }
 
