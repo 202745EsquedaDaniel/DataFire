@@ -11,14 +11,19 @@ const {
   updateWorkerSchema,
 } = require('../schemas/trabajadores.schema');
 
-router.get('/', async (req, res, next) => {
-  try {
-    const workers = await service.find();
-    res.json(workers);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
+  async (req, res, next) => {
+    try {
+      const workers = await service.find();
+      res.json(workers);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get(
   '/:id',
