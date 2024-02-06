@@ -16,7 +16,7 @@ const {
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
-  checkRoles('user'),
+  checkRoles('user', 'admin'),
   async (req, res, next) => {
     try {
       const customers = await service.find();

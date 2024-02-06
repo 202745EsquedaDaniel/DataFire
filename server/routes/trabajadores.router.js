@@ -43,6 +43,8 @@ router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   checkRoles('user', 'admin'),
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -57,6 +59,8 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(updateWorkerSchema, 'body'),
   validatorHandler(getWorkerSchema, 'params'),
   async (req, res, next) => {
@@ -73,6 +77,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getWorkerSchema, 'params'),
   async (req, res, next) => {
     try {
