@@ -19,14 +19,19 @@ const {
   updateAbonoSchema,
 } = require('../schemas/proyectos.schema');
 
-router.get('/', async (req, res, next) => {
-  try {
-    const projects = await service.find();
-    res.json(projects);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
+  async (req, res, next) => {
+    try {
+      const projects = await service.find();
+      res.json(projects);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get('/projectCustomer', async (req, res, next) => {
   try {

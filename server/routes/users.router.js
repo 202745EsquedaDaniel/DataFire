@@ -10,14 +10,19 @@ const {
 const router = express.Router();
 const service = new UserService();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await service.findUsers();
-    res.json(users);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
+  async (req, res, next) => {
+    try {
+      const users = await service.findUsers();
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get(
   '/:id',
