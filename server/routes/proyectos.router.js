@@ -4,6 +4,9 @@ const ProjectService = require('../services/proyectos.service');
 const service = new ProjectService();
 const { models } = require('../lib/sequelize');
 
+const passport = require('passport');
+const { checkRoles } = require('../middlewares/auth.handler');
+
 const validatorHandler = require('../middlewares/validator.handler');
 const {
   createProjectsSchema,
