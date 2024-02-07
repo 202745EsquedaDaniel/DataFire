@@ -317,19 +317,19 @@ class ProjectService {
     await abono.destroy();
 
     // Lógica para actualizar el monto abonado en el proyecto correspondiente
-    const nuevoMontoAbono = 0; // Se asume que se restablece a cero al eliminar el abono
-    const proyectoId = abono.projectId; // Ajusta según tu estructura de datos
+    const nuevoMontoAbono = data.monto; // Se asume que se restablece a cero al eliminar el abono
+    const proyectoId = abono.projectId;
 
     try {
       // Acceder a la instancia de Sequelize a través del modelo Abonos
       await Abonos.sequelize.query(
-        'CALL actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+        'SELECT restar_monto_abonado(:monto_a_restar, :proyecto_id)',
         {
           replacements: {
-            nuevo_monto: nuevoMontoAbono,
+            monto_a_restar: nuevoMontoAbono,
             proyecto_id: proyectoId,
           },
-          type: Abonos.sequelize.QueryTypes.RAW,
+          type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
 
