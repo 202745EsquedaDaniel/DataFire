@@ -114,6 +114,8 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(createProjectsSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -142,6 +144,8 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getProjectSchema, 'params'),
   validatorHandler(updateProjectSchema, 'body'),
   async (req, res, next) => {
@@ -158,6 +162,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('admin'),
   validatorHandler(getProjectSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -245,6 +251,8 @@ router.get(
 
 router.post(
   '/services',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(addServiceSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -259,6 +267,8 @@ router.post(
 
 router.patch(
   '/services/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getCostSchema, 'params'),
   validatorHandler(updateCostsSchema, 'body'),
   async (req, res, next) => {
@@ -275,6 +285,8 @@ router.patch(
 
 router.delete(
   '/services/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getProjectSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -304,6 +316,8 @@ router.get(
 
 router.post(
   '/abonos',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(addAbonoSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -318,6 +332,8 @@ router.post(
 
 router.patch(
   '/abonos/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getAbonoSchema, 'params'),
   validatorHandler(updateAbonoSchema, 'body'),
   async (req, res, next) => {
@@ -334,6 +350,8 @@ router.patch(
 
 router.delete(
   '/abonos/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('user', 'admin'),
   validatorHandler(getAbonoSchema, 'params'),
   async (req, res, next) => {
     try {
