@@ -316,7 +316,7 @@ class ProjectService {
     const abono = await this.findOneAbono(id);
     await abono.destroy();
 
-    // Lógica para actualizar el monto abonado en el proyecto correspondiente
+    // Lógica para actualizar el monto abonado en el proyecto correspondiente.
     const nuevoMontoAbono = data.monto; // Se asume que se restablece a cero al eliminar el abono
     const proyectoId = abono.projectId;
 
