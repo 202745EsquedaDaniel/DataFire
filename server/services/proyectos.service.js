@@ -314,11 +314,14 @@ class ProjectService {
 
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
-    await abono.destroy();
 
-    // Lógica para actualizar el monto abonado en el proyecto correspondiente.
-    const nuevoMontoAbono = data.monto; // Se asume que se restablece a cero al eliminar el abono
+    // Obtén el monto del abono antes de eliminarlo
+    const nuevoMontoAbono = abono.monto || 0;
+
+    // Guarda el ID del proyecto antes de destruir el abono
     const proyectoId = abono.projectId;
+
+    await abono.destroy();
 
     try {
       // Acceder a la instancia de Sequelize a través del modelo Abonos
@@ -340,7 +343,6 @@ class ProjectService {
 
     return { id };
   }
-
   // project Stats route
 }
 
