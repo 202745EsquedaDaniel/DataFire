@@ -25,6 +25,12 @@ const ProjectSchema = {
     allowNull: false,
     type: DataTypes.DATE,
   },
+  duracion: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+
   costo_inicial: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -94,6 +100,27 @@ class Project extends Model {
       hooks: {
         beforeCreate: async (project, options) => {
           project.costo = project.costo_inicial;
+        },
+        beforeCreate: async (project, options) => {
+          project.costo = project.costo_inicial;
+
+          const start = new Date(project.fecha_inicio);
+          const end = new Date(project.fecha_fin);
+
+          const durationInWeeks = Math.ceil(
+            (end - start) / (7 * 24 * 60 * 60 * 1000),
+          );
+          project.duracion = durationInWeeks;
+        },
+        beforeUpdate: async (project, options) => {
+          const start = new Date(project.fecha_inicio);
+          const end = new Date(project.fecha_fin);
+
+          // Calculate weeks difference and set the value to "duracion"
+          const durationInWeeks = Math.ceil(
+            (end - start) / (7 * 24 * 60 * 60 * 1000),
+          );
+          project.duracion = durationInWeeks;
         },
       },
     };
