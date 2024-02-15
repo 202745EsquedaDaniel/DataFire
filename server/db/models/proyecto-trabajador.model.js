@@ -2,6 +2,14 @@ const { Model, DataTypes, Sequelize } = require('sequelize');
 
 const { PROJECT_TABLE } = require('./proyectos.model');
 const { WORKER_TABLE } = require('./trabajadores.model');
+const { Nomina, NOMINA_TABLE } = require('./nominas.model');
+
+const { models } = require('../../lib/sequelize');
+
+const payrollService = require('../../services/payrolls.service');
+const service = new payrollService();
+
+const { Project } = require('./proyectos.model');
 
 const PROJECT_WORKER_TABLE = 'project_has_workers';
 
@@ -70,14 +78,59 @@ class ProjectWorker extends Model {
     });
   }
 
+  static async calculateNomina(projectWorker) {
+    const { project_id, worker_id } = projectWorker;
+
+    const project = await this.sequelize.models.Project.findByPk(project_id);
+    const worker = await this.sequelize.models.Worker.findByPk(worker_id);
+
+    const amount_paid = worker.salary * project.duracion;
+    const weeks_worked = project.duracion;
+    const payment_dates = calculatePaymentDates(
+      project.fecha_inicio,
+      project.fecha_fin,
+    );
+
+    await Nomina.create({
+      project_id,
+      worker_id,
+      amount_paid,
+      weeks_worked,
+      payment_dates,
+    });
+  }
+
   static config(sequelize) {
     return {
       sequelize,
       tableName: PROJECT_WORKER_TABLE,
       modelName: 'ProjectWorker',
       timestamps: false,
+      hooks: {
+        afterCreate: async (projectWorker, options) => {
+          await ProjectWorker.calculateNomina(projectWorker);
+        },
+      },
     };
   }
+}
+
+function calculatePaymentDates(startDate, endDate) {
+  // Implementa la lógica para calcular las fechas de pago entre startDate y endDate (cada lunes)
+  // ...
+
+  // Ejemplo simple (solo como referencia, puedes adaptarlo según tus necesidades)
+  const payment_dates = [];
+  let currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    if (currentDate.getDay() === 1) {
+      payment_dates.push(currentDate);
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return payment_dates;
 }
 
 module.exports = {

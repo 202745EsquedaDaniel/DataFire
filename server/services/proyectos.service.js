@@ -1,4 +1,3 @@
-const { faker } = require('@faker-js/faker');
 const { models } = require('../lib/sequelize');
 const { Abonos } = require('../db/models/abonos.model');
 const boom = require('@hapi/boom');
@@ -10,9 +9,6 @@ const {
 const { ProjectSchema } = require('../db/models/proyectos.model');
 
 class ProjectService {
-  constructor() {
-    // this.projects = [], this.generate()
-  }
   // -------Project Services! -----
   async find() {
     const rta = await models.Project.findAll();
@@ -315,10 +311,7 @@ class ProjectService {
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
 
-    // Obtén el monto del abono antes de eliminarlo
     const nuevoMontoAbono = abono.monto || 0;
-
-    // Guarda el ID del proyecto antes de destruir el abono
     const proyectoId = abono.projectId;
 
     await abono.destroy();
@@ -343,7 +336,6 @@ class ProjectService {
 
     return { id };
   }
-  // project Stats route
 }
 
 module.exports = ProjectService;

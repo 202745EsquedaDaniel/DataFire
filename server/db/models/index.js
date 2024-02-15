@@ -3,6 +3,7 @@ const { Project, ProjectSchema } = require('./proyectos.model');
 const { Worker, WorkerSchema } = require('./trabajadores.model');
 const { Service, ServiceSchema } = require('./servicios.model');
 const { User, UserSchema } = require('./users.model');
+
 const {
   ProjectCustomer,
   ProjectCustomerSchema,
@@ -12,6 +13,9 @@ const {
   ProjectWorkerSchema,
 } = require('./proyecto-trabajador.model');
 const { Abonos, AbonosSchema } = require('./abonos.model');
+
+//finances
+const { Nomina, NominaSchema } = require('./nominas.model');
 
 function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
@@ -23,8 +27,10 @@ function setupModels(sequelize) {
   ProjectCustomer.init(
     ProjectCustomerSchema,
     ProjectCustomer.config(sequelize),
-  ),
-    Abonos.init(AbonosSchema, Abonos.config(sequelize));
+  );
+  Abonos.init(AbonosSchema, Abonos.config(sequelize));
+  //finances
+  Nomina.init(NominaSchema, Nomina.config(sequelize));
 
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
