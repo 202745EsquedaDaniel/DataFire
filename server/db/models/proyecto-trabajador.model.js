@@ -92,6 +92,10 @@ class ProjectWorker extends Model {
       project.fecha_fin,
     );
 
+    //this update total project
+    const newTotal = project.costo + amount_paid;
+    await project.update({ costo: newTotal });
+
     await Nomina.create({
       project_id,
       worker_id,
@@ -100,6 +104,7 @@ class ProjectWorker extends Model {
       payment_dates,
     });
 
+    // create a cost for each week
     for (const paymentDate of payment_dates) {
       const serviceDescription = `Pago de ${worker.name} ${
         worker.last_name
