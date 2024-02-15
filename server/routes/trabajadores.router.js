@@ -11,19 +11,14 @@ const {
   updateWorkerSchema,
 } = require('../schemas/trabajadores.schema');
 
-router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
-  async (req, res, next) => {
-    try {
-      const workers = await service.find();
-      res.json(workers);
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+router.get('/', async (req, res, next) => {
+  try {
+    const workers = await service.find();
+    res.json(workers);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get(
   '/:id',
@@ -41,10 +36,7 @@ router.get(
 
 router.post(
   '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
+
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {

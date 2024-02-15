@@ -22,19 +22,14 @@ const {
   updateAbonoSchema,
 } = require('../schemas/proyectos.schema');
 
-router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
-  async (req, res, next) => {
-    try {
-      const projects = await service.find();
-      res.json(projects);
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+router.get('/', async (req, res, next) => {
+  try {
+    const projects = await service.find();
+    res.json(projects);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get('/projectCustomer', async (req, res, next) => {
   try {
@@ -114,8 +109,6 @@ router.get(
 
 router.post(
   '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(createProjectsSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -251,8 +244,6 @@ router.get(
 
 router.post(
   '/services',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(addServiceSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -285,8 +276,6 @@ router.patch(
 
 router.delete(
   '/services/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(getProjectSchema, 'params'),
   async (req, res, next) => {
     try {

@@ -3,6 +3,7 @@ const { Model, DataTypes, Sequelize } = require('sequelize');
 const { PROJECT_TABLE } = require('./proyectos.model');
 const { WORKER_TABLE } = require('./trabajadores.model');
 const { Nomina, NOMINA_TABLE } = require('./nominas.model');
+const { Service } = require('./servicios.model');
 
 const { models } = require('../../lib/sequelize');
 
@@ -98,6 +99,20 @@ class ProjectWorker extends Model {
       weeks_worked,
       payment_dates,
     });
+
+    for (const paymentDate of payment_dates) {
+      const serviceDescription = `Pago de ${worker.name} ${
+        worker.last_name
+      } en semana del ${paymentDate.toLocaleDateString()}`;
+      const cost = worker.salary;
+
+      await Service.create({
+        project_id,
+        amount: amount_paid,
+        service: serviceDescription,
+        cost,
+      });
+    }
   }
 
   static config(sequelize) {
@@ -116,10 +131,6 @@ class ProjectWorker extends Model {
 }
 
 function calculatePaymentDates(startDate, endDate) {
-  // Implementa la lógica para calcular las fechas de pago entre startDate y endDate (cada lunes)
-  // ...
-
-  // Ejemplo simple (solo como referencia, puedes adaptarlo según tus necesidades)
   const payment_dates = [];
   let currentDate = new Date(startDate);
 
