@@ -18,6 +18,7 @@ const monto = Joi.number().integer();
 const fecha_abono = Joi.date();
 const projectId = Joi.number().integer();
 const customerId = Joi.number().integer();
+const fecha_costo = Joi.date();
 
 const createProjectsSchema = Joi.object({
   name: name.required(),
@@ -57,6 +58,7 @@ const addServiceSchema = Joi.object({
   amount: amount.required(),
   service: service.required(),
   cost: cost.required(),
+  fecha_costo: fecha_costo.required(),
 });
 
 const updateCostsSchema = Joi.object({

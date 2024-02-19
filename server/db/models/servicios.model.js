@@ -34,6 +34,11 @@ const ServiceSchema = {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
+  fecha_costo: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    default: '2019-01-12T08:28:24.762Z',
+  },
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,

@@ -226,7 +226,7 @@ router.delete(
   },
 );
 
-/**---------------------------------------Services Rouder--------------------------------------------------------- */
+/**---------------------------------------Services Router--------------------------------------------------------- */
 // puse el get all arriba por que estaba teniendo problemas de asincronismo
 router.get(
   '/services/:id',

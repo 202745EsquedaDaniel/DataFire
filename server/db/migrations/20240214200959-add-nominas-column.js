@@ -4,7 +4,7 @@ const { NOMINA_TABLE, NominaSchema } = require('../models/nominas.model');
 
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.createTable(NOMINA_TABLE, NominaSchema);
+    await queryInterface.addColumm(NOMINA_TABLE, NominaSchema);
   },
 
   down: async (queryInterface) => {
