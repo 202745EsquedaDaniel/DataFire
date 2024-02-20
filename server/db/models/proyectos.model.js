@@ -1,5 +1,7 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
+const { startOfWeek, endOfWeek, eachWeekOfInterval } = require('date-fns');
+
 const { CUSTOMER_TABLE } = require('./cliente.model');
 
 const { Op } = require('sequelize');
@@ -200,6 +202,61 @@ class Project extends Model {
       return expensesByMonth;
     } catch (error) {
       console.error('Error fetching expenses by month:', error);
+      throw error;
+    }
+  }
+
+  static async getWeeklyExpenses() {
+    try {
+      const currentDate = new Date(2023, 0, 1);
+      const endYearDate = new Date(2023, 11, 31);
+
+      const weeklyExpenses = await this.sequelize.query(
+        `
+      SELECT
+        week_start,
+        name as project_name,
+        name as service_name, -- Utilizar 'name' en lugar de 'service_name'
+        COALESCE(SUM(costo), 0) as totalExpense
+      FROM
+        generate_series(
+          $1::timestamp,
+          $2::timestamp,
+          '1 week'::interval
+        ) week_start
+      LEFT JOIN
+        ${PROJECT_TABLE}
+      ON
+        fecha_inicio >= week_start
+      AND
+        fecha_inicio < week_start + '1 week'::interval
+      LEFT JOIN
+        services
+      ON
+        fecha_inicio >= week_start
+      AND
+        fecha_inicio < week_start + '1 week'::interval
+      GROUP BY
+        week_start, name
+      ORDER BY
+        week_start
+    `,
+        {
+          bind: [currentDate, endYearDate],
+          type: Sequelize.QueryTypes.SELECT,
+        },
+      );
+
+      const formattedWeeklyExpenses = weeklyExpenses.map((expense) => ({
+        week_start: expense.week_start,
+        project: expense.project_name,
+        service: expense.service_name, // Utilizar 'service_name' si la columna realmente se llama así
+        totalExpense: expense.totalExpense,
+      }));
+
+      return formattedWeeklyExpenses;
+    } catch (error) {
+      console.error('Error fetching weekly expenses:', error);
       throw error;
     }
   }

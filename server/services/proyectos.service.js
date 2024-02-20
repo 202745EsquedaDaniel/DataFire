@@ -38,6 +38,18 @@ class ProjectService {
     return project;
   }
 
+  async findSemanalCosts() {
+    const project = await models.Project.findAll({
+      include: ['abonos', 'services'],
+    });
+
+    if (!project) {
+      throw boom.notFound('Project not found');
+    }
+
+    return project;
+  }
+
   async update(id, changes) {
     const project = await this.findOne(id);
 
