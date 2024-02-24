@@ -67,16 +67,6 @@ router.get('/abonos', async (req, res, next) => {
   }
 });
 
-router.get('/egresos', async (req, res) => {
-  try {
-    const totalProjects = await models.Project.getWeeklyExpenses();
-
-    res.json(totalProjects);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 router.get('/project-stats', async (req, res) => {
   try {
     const totalProjects = await models.Project.getTotalProjects();
@@ -103,10 +93,10 @@ router.get(
   },
 );
 
-router.get('/costosSemanales', async (req, res, next) => {
+router.get('/egresos', async (req, res, next) => {
   try {
-    const totalProjects = await service.findSemanalCosts();
-    res.json(totalProjects);
+    const weeklyCosts = await service.findWeeklyCosts();
+    res.json(weeklyCosts);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
