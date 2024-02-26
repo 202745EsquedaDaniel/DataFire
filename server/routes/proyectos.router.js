@@ -102,6 +102,15 @@ router.get('/egresos', async (req, res, next) => {
   }
 });
 
+router.get('/weeklyAbonos', async (req, res, next) => {
+  try {
+    const services = await service.findWeeklyAbonos();
+    res.json(services);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get(
   '/:id',
   validatorHandler(getProjectSchema, 'params'),

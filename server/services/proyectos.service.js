@@ -51,76 +51,137 @@ class ProjectService {
   }
 
   async findWeeklyCosts() {
-  const startDate = new Date('2023-01-01'); // Fecha de inicio desde el año 2023
-  const endDate = new Date(); // Fecha actual
+    const startDate = new Date('2023-01-01'); // Fecha de inicio desde el año 2023
+    const endDate = new Date(); // Fecha actual
 
-  const projects = await models.Project.findAll({
-    include: ['abonos', 'services'],
-  });
-
-  if (!projects || projects.length === 0) {
-    throw boom.notFound('Projects not found');
-  }
-
-  const weeklyCosts = [];
-
-  // Iterar sobre cada semana desde 2023 hasta la fecha actual
-  let currentDate = new Date(startDate);
-  while (currentDate <= endDate) {
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setHours(0, 0, 0, 0);
-    const endOfWeek = new Date(currentDate);
-    endOfWeek.setDate(endOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999);
-
-    const weeklyCost = projects
-      .filter((project) => {
-        const projectData = project.toJSON();
-        const projectWeeklyCost = projectData.abonos.reduce((total, abono) => {
-          const abonoDate = new Date(abono.createdAt);
-          return abonoDate >= startOfWeek && abonoDate <= endOfWeek
-            ? total + abono.monto
-            : total;
-        }, 0);
-        return projectWeeklyCost > 0; // Filtrar proyectos con weeklyCost mayor a 0
-      })
-      .map((project) => {
-        const projectData = project.toJSON();
-        const projectWeeklyCost = projectData.abonos.reduce((total, abono) => {
-          const abonoDate = new Date(abono.createdAt);
-          if (abonoDate >= startOfWeek && abonoDate <= endOfWeek) {
-            total += abono.monto; // Asumiendo que el campo 'monto' contiene el costo
-          }
-          return total;
-        }, 0);
-
-        return {
-          projectId: projectData.id,
-          projectName: projectData.name, // Reemplaza 'name' con el campo correcto
-          weeklyCost: projectWeeklyCost,
-        };
-      });
-
-    // Calcular la suma total de los costos para la semana
-    const totalWeeklyCost = weeklyCost.reduce(
-      (total, entry) => total + entry.weeklyCost,
-      0,
-    );
-
-    weeklyCosts.push({
-      startDate: startOfWeek.toISOString(),
-      endDate: endOfWeek.toISOString(),
-      weeklyCost,
-      totalWeeklyCost,
+    const projects = await models.Project.findAll({
+      include: ['abonos', 'services'],
     });
 
-    // Mover a la siguiente semana
-    currentDate.setDate(currentDate.getDate() + 7);
+    if (!projects || projects.length === 0) {
+      throw boom.notFound('Projects not found');
+    }
+
+    const weeklyCosts = [];
+
+    // Iterar sobre cada semana desde 2023 hasta la fecha actual
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setHours(0, 0, 0, 0);
+      const endOfWeek = new Date(currentDate);
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      const weeklyCost = projects
+        .filter((project) => {
+          const projectData = project.toJSON();
+          const projectWeeklyCost = projectData.abonos.reduce(
+            (total, abono) => {
+              const abonoDate = new Date(abono.createdAt);
+              return abonoDate >= startOfWeek && abonoDate <= endOfWeek
+                ? total + abono.monto
+                : total;
+            },
+            0,
+          );
+          return projectWeeklyCost > 0; // Filtrar proyectos con weeklyCost mayor a 0
+        })
+        .map((project) => {
+          const projectData = project.toJSON();
+          const projectWeeklyCost = projectData.abonos.reduce(
+            (total, abono) => {
+              const abonoDate = new Date(abono.createdAt);
+              if (abonoDate >= startOfWeek && abonoDate <= endOfWeek) {
+                total += abono.monto; // Asumiendo que el campo 'monto' contiene el costo
+              }
+              return total;
+            },
+            0,
+          );
+
+          return {
+            projectId: projectData.id,
+            projectName: projectData.name, // Reemplaza 'name' con el campo correcto
+            weeklyCost: projectWeeklyCost,
+          };
+        });
+
+      // Calcular la suma total de los costos para la semana
+      const totalWeeklyCost = weeklyCost.reduce(
+        (total, entry) => total + entry.weeklyCost,
+        0,
+      );
+
+      weeklyCosts.push({
+        startDate: startOfWeek.toISOString(),
+        endDate: endOfWeek.toISOString(),
+        weeklyCost,
+        totalWeeklyCost,
+      });
+
+      // Mover a la siguiente semana
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return weeklyCosts;
   }
 
-  return weeklyCosts;
-}
+  async findWeeklyAbonos() {
+    const startDate = new Date('2023-01-01');
+    const endDate = new Date();
 
+    const abonos = await models.Abonos.findAll({
+      include: ['project'],
+    });
+
+    if (!abonos || abonos.length === 0) {
+      throw boom.notFound('Abonos not found');
+    }
+
+    const weeklyAbonos = [];
+
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setHours(0, 0, 0, 0);
+      const endOfWeek = new Date(currentDate);
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      const abonosForWeek = abonos
+        .filter((abono) => {
+          const abonoData = abono.toJSON();
+          const abonoDate = new Date(abonoData.fecha_abono);
+          return abonoDate >= startOfWeek && abonoDate <= endOfWeek;
+        })
+        .map((abono) => {
+          const abonoData = abono.toJSON();
+          return {
+            amount: abonoData.monto,
+            projectName: abonoData.project.name,
+            date: abonoData.fecha_abono.toISOString(),
+          };
+        });
+
+      const totalWeeklyAbonos = abonosForWeek.reduce(
+        (total, entry) => total + entry.amount,
+        0,
+      );
+
+      weeklyAbonos.push({
+        startDate: startOfWeek.toISOString(),
+        endDate: endOfWeek.toISOString(),
+        abonos: abonosForWeek,
+        totalWeeklyAbonos,
+      });
+
+      // Mover a la siguiente semana
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return weeklyAbonos;
+  }
 
   async update(id, changes) {
     const project = await this.findOne(id);
