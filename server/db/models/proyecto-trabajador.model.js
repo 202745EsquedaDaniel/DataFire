@@ -139,11 +139,14 @@ function calculatePaymentDates(startDate, endDate) {
   const payment_dates = [];
   let currentDate = new Date(startDate);
 
+  //  Monday (1)
+  currentDate.setDate(
+    currentDate.getDate() + ((1 - currentDate.getDay() + 7) % 7),
+  );
+
   while (currentDate <= endDate) {
-    if (currentDate.getDay() === 1) {
-      payment_dates.push(currentDate);
-    }
-    currentDate.setDate(currentDate.getDate() + 1);
+    payment_dates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 7);
   }
 
   return payment_dates;
