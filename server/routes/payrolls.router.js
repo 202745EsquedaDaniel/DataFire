@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const payrollService = require('../services/payrolls.service');
+const payrollService = require('../services/proyectos.service');
 const service = new payrollService();
 
 const passport = require('passport');

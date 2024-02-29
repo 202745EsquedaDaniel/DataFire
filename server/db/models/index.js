@@ -32,7 +32,6 @@ function setupModels(sequelize) {
   Abonos.init(AbonosSchema, Abonos.config(sequelize));
   //finances
 
-  Nomina.associate(sequelize.models);
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
 }

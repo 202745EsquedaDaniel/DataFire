@@ -1,12 +1,7 @@
-const boom = require('@hapi/boom');
 const { models } = require('../lib/sequelize');
+const boom = require('@hapi/boom');
 
 class PayrollService {
-  async findPayrolls() {
-    const rta = await models.Project.findAll();
-    return rta;
-  }
-
   async getPayrollInformation() {
     // Obtener todas las nominas
     const nominas = await models.Nomina.findAll({
