@@ -10,8 +10,8 @@ function routerApi(app) {
     app.use('/Api/v1/clientes', clientesRouter),
     app.use('/Api/v1/trabajadores', trabajadoresRouter),
     app.use('/Api/v1/users', usersRouter),
-    app.use('/Api/v1/auth', authRouter),
-    app.use('/Api/v1/payrolls', payrollsRouter);
+    app.use('/Api/v1/payrolls', payrollsRouter),
+    app.use('/Api/v1/auth', authRouter);
 }
 
 module.exports = routerApi;

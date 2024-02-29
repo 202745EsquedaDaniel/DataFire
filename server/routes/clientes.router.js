@@ -13,19 +13,14 @@ const {
   updateCustomersSchema,
 } = require('../schemas/clientes.schema');
 
-router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
-  async (req, res, next) => {
-    try {
-      const customers = await service.find();
-      res.json(customers);
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+router.get('/', async (req, res, next) => {
+  try {
+    const customers = await service.find();
+    res.json(customers);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get(
   '/:id',

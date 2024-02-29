@@ -1,5 +1,4 @@
 const { models } = require('../lib/sequelize');
-const { use } = require('../routes/clientes.router');
 const boom = require('@hapi/boom');
 
 class CustomersService {

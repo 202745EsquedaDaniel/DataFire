@@ -22,6 +22,7 @@ function setupModels(sequelize) {
   Project.init(ProjectSchema, Project.config(sequelize));
   Worker.init(WorkerSchema, Worker.config(sequelize));
   Service.init(ServiceSchema, Service.config(sequelize));
+  Nomina.init(NominaSchema, Nomina.config(sequelize));
   ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize));
   User.init(UserSchema, User.config(sequelize));
   ProjectCustomer.init(
@@ -30,8 +31,8 @@ function setupModels(sequelize) {
   );
   Abonos.init(AbonosSchema, Abonos.config(sequelize));
   //finances
-  Nomina.init(NominaSchema, Nomina.config(sequelize));
 
+  Nomina.associate(sequelize.models);
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
 }

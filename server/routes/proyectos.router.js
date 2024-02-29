@@ -67,6 +67,28 @@ router.get('/abonos', async (req, res, next) => {
   }
 });
 
+router.get('/cuentasCobrar', async (req, res, next) => {
+  try {
+    const projects = await models.Project.findAll({
+      where: {
+        status: false,
+      },
+      include: [
+        {
+          model: models.ProjectCustomer,
+          as: 'projectCustomers',
+          attributes: ['customer_name'], // Puedes incluir más atributos si es necesario
+        },
+      ],
+      attributes: ['name', 'remaining'], // Puedes incluir más atributos del proyecto si es necesario
+    });
+
+    res.json(projects);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/project-stats', async (req, res) => {
   try {
     const totalProjects = await models.Project.getTotalProjects();
@@ -323,8 +345,6 @@ router.get(
 
 router.post(
   '/abonos',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(addAbonoSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -339,8 +359,6 @@ router.post(
 
 router.patch(
   '/abonos/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(getAbonoSchema, 'params'),
   validatorHandler(updateAbonoSchema, 'body'),
   async (req, res, next) => {

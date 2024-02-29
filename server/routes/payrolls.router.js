@@ -23,6 +23,15 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/payrollsWeek', async (req, res, next) => {
+  try {
+    const workers = await service.getPayrollInformation();
+    res.json(workers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get(
   '/:id',
   validatorHandler(getWorkerSchema, 'params'),

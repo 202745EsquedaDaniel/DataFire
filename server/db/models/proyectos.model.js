@@ -53,6 +53,11 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  status: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   customerId: {
     field: 'customer_id',
     allowNull: false,
@@ -115,14 +120,19 @@ class Project extends Model {
           project.duracion = durationInWeeks;
         },
         beforeUpdate: async (project, options) => {
+          // Calcula la duración en semanas antes de la actualización
           const start = new Date(project.fecha_inicio);
           const end = new Date(project.fecha_fin);
-
-          // Calculate weeks difference and set the value to "duracion"
           const durationInWeeks = Math.ceil(
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
+
+          // Verifica si 'remaining' se actualiza y es igual a 0
+          if (project.changed('remaining') && project.remaining === 0) {
+            // Cambia el valor de 'status' a true
+            project.status = true;
+          }
         },
       },
     };
