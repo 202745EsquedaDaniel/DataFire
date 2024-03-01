@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const { models } = require('../lib/sequelize');
+
 const payrollService = require('../services/proyectos.service');
 const service = new payrollService();
 
@@ -25,8 +27,31 @@ router.get('/', async (req, res, next) => {
 
 router.get('/payrollsWeek', async (req, res, next) => {
   try {
-    const workers = await service.getPayrollInformation();
-    res.json(workers);
+    // Obtener la información de las nóminas con detalles de worker y project
+    const payrolls = await models.Nomina.findAll({
+      include: [
+        {
+          model: models.Worker,
+          as: 'worker',
+          attributes: ['name', 'salary'],
+        },
+        {
+          model: models.Project,
+          as: 'project',
+          attributes: ['name'],
+        },
+      ],
+    });
+
+    // Formatear la información para el retorno
+    const formattedPayrolls = payrolls.map((payroll) => ({
+      workername: payroll.worker.name,
+      fecha_pago: payroll.payment_dates, // Asumiendo que las fechas de pago están en payment_dates
+      salario: payroll.worker.salary,
+      nombre_proyecto: payroll.project.name,
+    }));
+
+    res.json(formattedPayrolls);
   } catch (error) {
     next(error);
   }

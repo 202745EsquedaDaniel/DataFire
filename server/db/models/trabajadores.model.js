@@ -44,6 +44,12 @@ class Worker extends Model {
       foreignKey: 'worker_id',
       include: [{ model: models.Project, as: 'project', attributes: ['name'] }],
     });
+    this.hasMany(models.Nomina, {
+      foreignKey: 'worker_id',
+      as: 'nominas',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   }
 
   static config(sequelize) {
