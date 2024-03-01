@@ -3,6 +3,7 @@ const { Project, ProjectSchema } = require('./proyectos.model');
 const { Worker, WorkerSchema } = require('./trabajadores.model');
 const { Service, ServiceSchema } = require('./servicios.model');
 const { User, UserSchema } = require('./users.model');
+const { Prestamo, PrestamoSchema } = require('./prestamos.model');
 
 const {
   ProjectCustomer,
@@ -31,6 +32,7 @@ function setupModels(sequelize) {
   );
   Abonos.init(AbonosSchema, Abonos.config(sequelize));
   //finances
+  Prestamo.init(PrestamoSchema, Prestamo.config(sequelize));
 
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);

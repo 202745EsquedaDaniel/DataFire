@@ -15,6 +15,11 @@ class ProjectService {
     return rta;
   }
 
+  async findAllPrestamos() {
+    const rta = await models.Prestamo.findAll();
+    return rta;
+  }
+
   async findOne(id) {
     const project = await models.Project.findByPk(id, {
       include: [
@@ -145,8 +150,6 @@ class ProjectService {
       ],
     });
 
-
-
     // Transformar la información
     const payrollInfo = nominas.map((nomina) => {
       const { name, last_name, salary } = nomina.worker;
@@ -197,7 +200,6 @@ class ProjectService {
       throw error;
     }
   }
-
 
   async findWeeklyAbonos() {
     const startDate = new Date('2023-01-01');

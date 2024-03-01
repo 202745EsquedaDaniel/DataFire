@@ -77,10 +77,10 @@ router.get('/cuentasCobrar', async (req, res, next) => {
         {
           model: models.ProjectCustomer,
           as: 'projectCustomers',
-          attributes: ['customer_name'], // Puedes incluir más atributos si es necesario
+          attributes: ['customer_name'],
         },
       ],
-      attributes: ['name', 'remaining'], // Puedes incluir más atributos del proyecto si es necesario
+      attributes: ['name', 'remaining'],
     });
 
     res.json(projects);
@@ -121,6 +121,105 @@ router.get('/egresos', async (req, res, next) => {
     res.json(weeklyCosts);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/prestamos', async (req, res, next) => {
+  try {
+    const weeklyCosts = await service.findAllPrestamos();
+    res.json(weeklyCosts);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/flujo', async (req, res, next) => {
+  try {
+    const startDate = new Date('2023-01-01');
+    const endDate = new Date();
+
+    const projects = await models.Project.findAll({
+      include: ['abonos', 'services'],
+    });
+
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ error: 'Projects not found' });
+    }
+
+    const prestamos = await service.findAllPrestamos();
+
+    const weeklyFlows = [];
+
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setHours(0, 0, 0, 0);
+      const endOfWeek = new Date(currentDate);
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      // Obtener el balance total de la semana pasada
+      const lastWeekBalance =
+        weeklyFlows.length > 0
+          ? weeklyFlows[weeklyFlows.length - 1]['Balance total']
+          : 0;
+
+      const weeklyIncomes = projects.reduce((total, project) => {
+        const projectData = project.toJSON();
+        const projectWeeklyIncome = projectData.abonos.reduce(
+          (totalAbono, abono) => {
+            const abonoDate = new Date(abono.createdAt);
+            return abonoDate >= startOfWeek && abonoDate <= endOfWeek
+              ? totalAbono + abono.monto
+              : totalAbono;
+          },
+          0,
+        );
+        return total + projectWeeklyIncome;
+      }, 0);
+
+      const weeklyExpenses = projects.reduce((total, project) => {
+        const projectData = project.toJSON();
+        const projectWeeklyExpense = projectData.services.reduce(
+          (totalService, service) => {
+            const serviceDate = new Date(service.createdAt);
+            return serviceDate >= startOfWeek && serviceDate <= endOfWeek
+              ? totalService + service.cost
+              : totalService;
+          },
+          0,
+        );
+        return total + projectWeeklyExpense;
+      }, 0);
+
+      const weeklyPrestamo = prestamos.reduce((totalPrestamo, prestamo) => {
+        const prestamoDate = new Date(prestamo.date_prestamo);
+        return prestamoDate >= startOfWeek && prestamoDate <= endOfWeek
+          ? totalPrestamo + prestamo.amount_paid
+          : totalPrestamo;
+      }, 0);
+
+      const weeklyFlow = {
+        startDate: startOfWeek.toISOString(),
+        endDate: endOfWeek.toISOString(),
+        caja: lastWeekBalance,
+        ingresos: weeklyIncomes,
+        egresos: weeklyExpenses,
+        'balance de flujo': lastWeekBalance + weeklyIncomes - weeklyExpenses,
+        prestamo: weeklyPrestamo,
+        'Balance total':
+          lastWeekBalance + weeklyIncomes - weeklyExpenses + weeklyPrestamo,
+      };
+
+      weeklyFlows.push(weeklyFlow);
+
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    res.json(weeklyFlows);
+  } catch (error) {
+    next(error);
   }
 });
 
