@@ -60,7 +60,7 @@ class Nomina extends Model {
     });
     this.belongsTo(models.Worker, {
       foreignKey: 'worker_id',
-      as: 'worker',
+      as: 'worker',  // This should match the alias used in your include in the service
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });

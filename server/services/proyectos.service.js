@@ -145,6 +145,8 @@ class ProjectService {
       ],
     });
 
+
+
     // Transformar la información
     const payrollInfo = nominas.map((nomina) => {
       const { name, last_name, salary } = nomina.worker;
@@ -160,6 +162,42 @@ class ProjectService {
 
     return payrollInfo;
   }
+
+  async findPayrollsWeeks() {
+    try {
+      const payrolls = await models.Nomina.findAll({
+        include: [
+          {
+            model: models.Worker,
+            as: 'worker',
+            attributes: ['name'],
+          },
+          {
+            model: models.Project,
+            as: 'project',
+            attributes: ['name'],
+          },
+        ],
+        attributes: ['payment_dates', 'amount_paid'],
+      });
+
+      // Map the results to the desired JSON format
+      const formattedPayrolls = payrolls.map((payroll) => {
+        return {
+          fecha_pago: payroll.payment_dates, // Assuming payment_dates is an array of dates
+          nombre_trabajador: payroll.worker.name,
+          sueldo: payroll.amount_paid,
+          nombre_proyecto: payroll.project.name,
+        };
+      });
+
+      return formattedPayrolls;
+    } catch (error) {
+      console.error('Error fetching payrolls:', error);
+      throw error;
+    }
+  }
+
 
   async findWeeklyAbonos() {
     const startDate = new Date('2023-01-01');

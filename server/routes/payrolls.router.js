@@ -27,31 +27,8 @@ router.get('/', async (req, res, next) => {
 
 router.get('/payrollsWeek', async (req, res, next) => {
   try {
-    // Obtener la información de las nóminas con detalles de worker y project
-    const payrolls = await models.Nomina.findAll({
-      include: [
-        {
-          model: models.Worker,
-          as: 'worker',
-          attributes: ['name', 'salary'],
-        },
-        {
-          model: models.Project,
-          as: 'project',
-          attributes: ['name'],
-        },
-      ],
-    });
-
-    // Formatear la información para el retorno
-    const formattedPayrolls = payrolls.map((payroll) => ({
-      workername: payroll.worker.name,
-      fecha_pago: payroll.payment_dates, // Asumiendo que las fechas de pago están en payment_dates
-      salario: payroll.worker.salary,
-      nombre_proyecto: payroll.project.name,
-    }));
-
-    res.json(formattedPayrolls);
+    const payrolls = await service.findPayrollsWeeks();
+    res.json(payrolls);
   } catch (error) {
     next(error);
   }
