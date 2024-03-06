@@ -10,7 +10,7 @@ const { ProjectSchema } = require('../db/models/proyectos.model');
 
 class ProjectService {
   // -------Project Services! -----
-  async find() {
+  async findProjects() {
     const rta = await models.Project.findAll();
     return rta;
   }

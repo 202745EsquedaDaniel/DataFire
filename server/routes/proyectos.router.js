@@ -24,7 +24,7 @@ const {
 
 router.get('/', async (req, res, next) => {
   try {
-    const projects = await service.find();
+    const projects = await service.findProjects();
     res.json(projects);
   } catch (error) {
     next(error);
