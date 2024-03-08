@@ -111,11 +111,15 @@ class ProjectWorker extends Model {
       } en semana del ${paymentDate.toLocaleDateString()}`;
       const cost = worker.salary;
 
+      // Agrega el atributo fecha_costo con la fecha del pago
+      const fecha_costo = paymentDate;
+
       await Service.create({
         project_id,
         amount: amount_paid,
         service: serviceDescription,
         cost,
+        fecha_costo,
       });
     }
   }

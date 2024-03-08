@@ -133,6 +133,16 @@ router.get('/prestamos', async (req, res, next) => {
   }
 });
 
+router.post('/prestamos', async (req, res, next) => {
+  try {
+    const nuevoPrestamo = await service.createPrestamo(req.body);
+    res.status(201).json(nuevoPrestamo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.get('/flujo', async (req, res, next) => {
   try {
     const startDate = new Date('2023-01-01');

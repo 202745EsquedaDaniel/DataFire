@@ -60,7 +60,7 @@ class ProjectService {
     const endDate = new Date(); // Fecha actual
 
     const projects = await models.Project.findAll({
-      include: ['abonos', 'services'],
+      include: ['services'], // Excluir 'abonos' y solo incluir 'services'
     });
 
     if (!projects || projects.length === 0) {
@@ -81,24 +81,27 @@ class ProjectService {
       const weeklyCost = projects
         .filter((project) => {
           const projectData = project.toJSON();
-          const projectWeeklyCost = projectData.abonos.reduce(
-            (total, abono) => {
-              const abonoDate = new Date(abono.createdAt);
-              return abonoDate >= startOfWeek && abonoDate <= endOfWeek
-                ? total + abono.monto
+
+          const projectWeeklyServiceCost = projectData.services.reduce(
+            (total, service) => {
+              const serviceDate = new Date(service.createdAt);
+              return serviceDate >= startOfWeek && serviceDate <= endOfWeek
+                ? total + service.cost
                 : total;
             },
             0,
           );
-          return projectWeeklyCost > 0; // Filtrar proyectos con weeklyCost mayor a 0
+
+          return projectWeeklyServiceCost > 0;
         })
         .map((project) => {
           const projectData = project.toJSON();
-          const projectWeeklyCost = projectData.abonos.reduce(
-            (total, abono) => {
-              const abonoDate = new Date(abono.createdAt);
-              if (abonoDate >= startOfWeek && abonoDate <= endOfWeek) {
-                total += abono.monto; // Asumiendo que el campo 'monto' contiene el costo
+
+          const projectWeeklyServiceCost = projectData.services.reduce(
+            (total, service) => {
+              const serviceDate = new Date(service.createdAt);
+              if (serviceDate >= startOfWeek && serviceDate <= endOfWeek) {
+                total += service.cost;
               }
               return total;
             },
@@ -108,7 +111,7 @@ class ProjectService {
           return {
             projectId: projectData.id,
             projectName: projectData.name, // Reemplaza 'name' con el campo correcto
-            weeklyCost: projectWeeklyCost,
+            weeklyCost: projectWeeklyServiceCost,
           };
         });
 
@@ -130,11 +133,6 @@ class ProjectService {
     }
 
     return weeklyCosts;
-  }
-
-  async findPayrolls() {
-    const rta = await models.Nomina.findAll();
-    return rta;
   }
 
   async getPayrollInformation() {
@@ -554,6 +552,11 @@ class ProjectService {
     }
 
     return { id };
+  }
+
+  async createPrestamo(data) {
+    const nuevoPrestamo = await models.Prestamo.create(data);
+    return nuevoPrestamo;
   }
 }
 
