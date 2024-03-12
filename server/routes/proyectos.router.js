@@ -175,6 +175,8 @@ router.get('/flujo', async (req, res, next) => {
           ? weeklyFlows[weeklyFlows.length - 1]['Balance total']
           : 0;
 
+      // Lógica de cálculo de ingresos semanales
+      // Lógica de cálculo de ingresos semanales
       const weeklyIncomes = projects.reduce((total, project) => {
         const projectData = project.toJSON();
         const projectWeeklyIncome = projectData.abonos.reduce(
@@ -186,9 +188,22 @@ router.get('/flujo', async (req, res, next) => {
           },
           0,
         );
-        return total + projectWeeklyIncome;
+
+        // Agregar ingresos semanales de abonos al total
+        const abonosForWeek = projectData.abonos.filter((abono) => {
+          const abonoDate = new Date(abono.createdAt);
+          return abonoDate >= startOfWeek && abonoDate <= endOfWeek;
+        });
+
+        const abonosTotalForWeek = abonosForWeek.reduce(
+          (totalAbono, abono) => totalAbono + abono.monto,
+          0,
+        );
+
+        return total + abonosTotalForWeek;
       }, 0);
 
+      // Lógica de cálculo de egresos semanales
       const weeklyExpenses = projects.reduce((total, project) => {
         const projectData = project.toJSON();
         const projectWeeklyExpense = projectData.services.reduce(
@@ -203,6 +218,7 @@ router.get('/flujo', async (req, res, next) => {
         return total + projectWeeklyExpense;
       }, 0);
 
+      // Lógica de cálculo de préstamos semanales
       const weeklyPrestamo = prestamos.reduce((totalPrestamo, prestamo) => {
         const prestamoDate = new Date(prestamo.date_prestamo);
         return prestamoDate >= startOfWeek && prestamoDate <= endOfWeek
@@ -210,6 +226,9 @@ router.get('/flujo', async (req, res, next) => {
           : totalPrestamo;
       }, 0);
 
+      // Resto de la lógica para calcular caja, balance de flujo, etc.
+
+      // Crear el objeto de flujo semanal
       const weeklyFlow = {
         startDate: startOfWeek.toISOString(),
         endDate: endOfWeek.toISOString(),
@@ -222,18 +241,22 @@ router.get('/flujo', async (req, res, next) => {
           lastWeekBalance + weeklyIncomes - weeklyExpenses + weeklyPrestamo,
       };
 
+      // Agregar el flujo semanal al array
       weeklyFlows.push(weeklyFlow);
 
+      // Mover a la siguiente semana
       currentDate.setDate(currentDate.getDate() + 7);
     }
 
+    // Enviar la respuesta con los flujos semanales
     res.json(weeklyFlows);
   } catch (error) {
+    // Manejar cualquier error que pueda ocurrir
     next(error);
   }
 });
 
-router.get('/weeklyAbonos', async (req, res, next) => {
+router.get('/ingresos', async (req, res, next) => {
   try {
     const services = await service.findWeeklyAbonos();
     res.json(services);
