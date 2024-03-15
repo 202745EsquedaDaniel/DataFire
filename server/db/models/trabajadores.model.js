@@ -25,9 +25,21 @@ const WorkerSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  salary_hour: {
+    allowNull: true,
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  semanal_hours: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  // Columna de salario que almacena el resultado de salary_hour * hours_worked
   salary: {
     allowNull: false,
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
+    defaultValue: 0, // Asegura que siempre haya un valor por defecto
   },
   createdAt: {
     allowNull: false,
@@ -44,6 +56,10 @@ class Worker extends Model {
       foreignKey: 'worker_id',
       include: [{ model: models.Project, as: 'project', attributes: ['name'] }],
     });
+    this.hasMany(models.NominasSemanales, {
+      as: 'NominasSemanales',
+      foreignKey: 'worker_id',
+    });
   }
 
   static config(sequelize) {
@@ -52,6 +68,11 @@ class Worker extends Model {
       tableName: WORKER_TABLE,
       modelname: 'worker',
       timestamps: false,
+      hooks: {
+        beforeSave: (worker, options) => {
+          worker.salary = worker.salary_hour * worker.semanal_hours;
+        },
+      },
     };
   }
 }

@@ -18,10 +18,19 @@ const { Abonos, AbonosSchema } = require('./abonos.model');
 //finances
 const { Nomina, NominaSchema } = require('./nominas.model');
 
+const {
+  NominasSemanales,
+  NominasSemanalesSchema,
+} = require('./nominasSemanales');
+
 function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
   Project.init(ProjectSchema, Project.config(sequelize));
   Worker.init(WorkerSchema, Worker.config(sequelize));
+  NominasSemanales.init(
+    NominasSemanalesSchema,
+    NominasSemanales.config(sequelize),
+  );
   Service.init(ServiceSchema, Service.config(sequelize));
   Nomina.init(NominaSchema, Nomina.config(sequelize));
   ProjectWorker.init(ProjectWorkerSchema, ProjectWorker.config(sequelize));
