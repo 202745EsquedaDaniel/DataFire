@@ -51,8 +51,8 @@ class NominasSemanalesService {
         .map((nomina) => ({
           workerId: nomina.worker_id,
           // Aquí deberás ajustar cómo obtienes el nombre del trabajador, dado que no estás usando la asociación directamente
-          workerName: '', // Placeholder: Obtén el nombre del trabajador manualmente
-          salary: nomina.salary,
+          workerName: nomina.nombre, // Placeholder: Obtén el nombre del trabajador manualmente
+          salary: nomina.salario_final,
           startDate: nomina.fecha_inicio_semana,
           endDate: nomina.fecha_fin_semana,
         }));
