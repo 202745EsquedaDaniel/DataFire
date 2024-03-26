@@ -9,16 +9,37 @@ class WorkerService {
     return rta;
   }
 
+  async findWorkerCost() {
+    const rta = await models.WorkerCost.findAll();
+    return rta;
+  }
+
   async findOne(id) {
-    const worker = await models.Worker.findByPk(id);
+    const worker = await models.Worker.findByPk(id, {
+      include: [{ model: models.WorkerCost, as: 'WorkerCosts' }]
+    });
     if (!worker) {
       throw boom.notFound('Worker not found');
     }
     return worker;
   }
 
+  async findOneWorkerCosts(id) {
+    const worker = await models.WorkerCost.findByPk(id);
+    if (!worker) {
+      throw boom.notFound('Worker not found');
+    }
+    return worker;
+  }
+
+
   async create(data) {
     const newWorker = await models.Worker.create(data);
+    return newWorker;
+  }
+
+  async createWorkerCost(data) {
+    const newWorker = await models.WorkerCost.create(data);
     return newWorker;
   }
 
@@ -35,6 +56,13 @@ class WorkerService {
 
   async delete(id) {
     const worker = await this.findOne(id);
+
+    await worker.destroy();
+    return { id };
+  }
+
+  async deleteProjectWorker(id) {
+    const worker = await this.findOneWorkerCosts(id);
 
     await worker.destroy();
     return { id };

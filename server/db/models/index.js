@@ -4,6 +4,7 @@ const { Worker, WorkerSchema } = require('./trabajadores.model');
 const { Service, ServiceSchema } = require('./servicios.model');
 const { User, UserSchema } = require('./users.model');
 const { Prestamo, PrestamoSchema } = require('./prestamos.model');
+const { WorkerCost, WorkerCostsSchema} = require("./WorkerCosts.model")
 
 const {
   ProjectCustomer,
@@ -27,6 +28,7 @@ function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
   Project.init(ProjectSchema, Project.config(sequelize));
   Worker.init(WorkerSchema, Worker.config(sequelize));
+  WorkerCost.init(WorkerCostsSchema, WorkerCost.config(sequelize));
   NominasSemanales.init(
     NominasSemanalesSchema,
     NominasSemanales.config(sequelize),
@@ -45,6 +47,9 @@ function setupModels(sequelize) {
 
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
+  Worker.associate(sequelize.models);
+  WorkerCost.associate(sequelize.models);
+
 }
 
 module.exports = setupModels;

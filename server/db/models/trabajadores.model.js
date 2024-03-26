@@ -41,6 +41,12 @@ const WorkerSchema = {
     type: DataTypes.FLOAT,
     defaultValue: 0, // Asegura que siempre haya un valor por defecto
   },
+  WorkerCost:{
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+
+  },
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
@@ -50,7 +56,7 @@ const WorkerSchema = {
 };
 
 class Worker extends Model {
-  static static(models) {
+  static associate(models) {
     this.hasMany(models.ProjectWorker, {
       as: 'projectWorkers',
       foreignKey: 'worker_id',
@@ -60,13 +66,18 @@ class Worker extends Model {
       as: 'NominasSemanales',
       foreignKey: 'worker_id',
     });
+    this.hasMany(models.WorkerCost, {
+      as: 'WorkerCosts',
+      foreignKey: 'worker_id',
+    });
+
   }
 
   static config(sequelize) {
     return {
       sequelize,
       tableName: WORKER_TABLE,
-      modelname: 'worker',
+      modelName: 'Worker',
       timestamps: false,
       hooks: {
         beforeSave: (worker, options) => {

@@ -9,11 +9,21 @@ const {
   createWorkerSchema,
   getWorkerSchema,
   updateWorkerSchema,
+  createWorkerCostSchema,
 } = require('../schemas/trabajadores.schema');
 
 router.get('/', async (req, res, next) => {
   try {
     const workers = await service.find();
+    res.json(workers);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/WorkerCosts', async (req, res, next) => {
+  try {
+    const workers = await service.findWorkerCost();
     res.json(workers);
   } catch (error) {
     next(error);
@@ -49,6 +59,21 @@ router.post(
   },
 );
 
+router.post(
+  '/WorkerCosts',
+
+  validatorHandler(createWorkerCostSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newWorker = await service.createWorkerCost(body);
+      res.status(201).json(newWorker);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 router.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -76,6 +101,20 @@ router.delete(
     try {
       const { id } = req.params;
       await service.delete(id);
+      res.status(201).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.delete(
+  '/WorkerCosts/:id',
+  validatorHandler(getWorkerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.deleteProjectWorker(id);
       res.status(201).json({ id });
     } catch (error) {
       next(error);
