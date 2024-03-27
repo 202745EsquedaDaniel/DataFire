@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const routerApi = require('./routes');
 const { checkApiKey } = require('./middlewares/auth.handler');
+const {setupWebSocketServer} = require('./lib/webnsocket');
 
 const {
   logErrors,
@@ -11,7 +13,17 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
+/* Websocker config */
+const server = http.createServer(app); // Crea un servidor HTTP para Express
+
+// Inicializa el servidor WebSocket pasando el servidor HTTP
+const wss = setupWebSocketServer(server);
+module.exports.wss = wss;
+
+/* Websocker config */
+
 const port = process.env.PORT || 3000;
+
 
 app.use(express.json());
 
@@ -46,6 +58,8 @@ app.use(ormErrorHandler);
 app.use(boomHandler);
 app.use(errorHandler);
 
-app.listen(port, () => {
+// Cambia app.listen por server.listen (solo si hay websocker)
+
+server.listen(port, () => {
   console.log('My port:' + port);
 });

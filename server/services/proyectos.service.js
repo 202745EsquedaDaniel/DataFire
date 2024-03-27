@@ -8,7 +8,54 @@ const {
 } = require('../schemas/proyectos.schema');
 const { ProjectSchema } = require('../db/models/proyectos.model');
 
+const WebSocket = require('ws');
+const { getWss } = require('../lib/webnsocket');
+
 class ProjectService {
+
+async updateCards(proyectoId) {
+  const wss = getWss();
+
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      console.log("hola")
+    }
+  });
+
+      // Obtiene los datos actualizados del proyecto, incluyendo el total, abonado y restante.
+      const updatedProjectData = await this.findOne(proyectoId);
+
+      // Verifica si wss está definido y si tiene la propiedad clients
+     // Verifica si wss está definido y si tiene la propiedad clients
+if (wss && wss.clients) {
+wss.clients.forEach((client) => {
+  if (client.readyState === WebSocket.OPEN) {
+    // Aquí enviarías el mensaje al cliente
+    client.send('¡Hola cliente!');+
+    console.log("bien hecho")
+  }
+});
+}
+
+
+      if (wss && wss.clients) {
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            // Asegúrate de enviar solo los datos necesarios para actualizar las vistas de las tarjetas.
+            const dataToSend = {
+              costo: updatedProjectData.costo,
+              abonado: updatedProjectData.abonado,
+              remaining: updatedProjectData.remaining,
+            };
+            console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
+            client.send(JSON.stringify(dataToSend));
+          }
+        });
+      }
+
+      console.log('Monto abonado actualizado correctamente y notificado a los clientes.');
+}
+
   // -------Project Services! -----
   async findProjects() {
     const rta = await models.Project.findAll();
@@ -393,7 +440,7 @@ class ProjectService {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
-
+    await this.updateCards(proyectoId)
     const rta = await cost.update(changes);
     return rta;
   }
@@ -414,6 +461,7 @@ class ProjectService {
       },
     );
 
+    await this.updateCards(proyectoId)
     return newService;
   }
   async deleteService(id) {
@@ -433,6 +481,7 @@ class ProjectService {
       },
     );
 
+    await this.updateCards(proyectoId)
     return { id };
   }
 
@@ -498,32 +547,43 @@ class ProjectService {
   }
 
   async createAbono(data) {
-    const newAbono = await Abonos.create(data);
-
-    // Lógica para actualizar el monto abonado en el proyecto correspondiente
-    const nuevoMontoAbono = data.monto || 0; // Ajusta según tu estructura de datos
-    const proyectoId = data.projectId; // Ajusta según tu estructura de datos
-
     try {
-      // Cambia la llamada de CALL a SELECT para invocar la función almacenada
-      await Abonos.sequelize.query(
-        'SELECT actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
-        {
-          replacements: {
-            nuevo_monto: nuevoMontoAbono,
-            proyecto_id: proyectoId,
+
+      const newAbono = await Abonos.create(data);
+      const nuevoMontoAbono = data.monto || 0;
+      const proyectoId = data.projectId;
+
+      try {
+        // Actualiza el monto abonado en la base de datos
+        await Abonos.sequelize.query(
+          'SELECT actualizar_monto_abonado(:nuevo_monto, :proyecto_id)',
+          {
+            replacements: {
+              nuevo_monto: nuevoMontoAbono,
+              proyecto_id: proyectoId,
+            },
+            type: Abonos.sequelize.QueryTypes.SELECT,
           },
-          type: Abonos.sequelize.QueryTypes.SELECT,
-        },
-      );
+        );
 
-      console.log('Monto abonado actualizado correctamente');
+          await this.updateCards(proyectoId)
+
+
+      } catch (error) {
+        console.error('Error al actualizar el monto abonado y notificar a los clientes:', error);
+        throw error; // Asegúrate de manejar este error adecuadamente en tu aplicación.
+      }
+
+
+      return newAbono;
     } catch (error) {
-      console.error('Error al actualizar el monto abonado:', error);
+      console.error('Error al crear un abono:', error);
+      throw error;
     }
-
-    return newAbono;
   }
+
+
+
 
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
@@ -545,7 +605,7 @@ class ProjectService {
           type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
-
+      await this.updateCards(proyectoId)
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
