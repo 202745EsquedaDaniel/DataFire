@@ -440,13 +440,14 @@ wss.clients.forEach((client) => {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
-    await this.updateCards(proyectoId)
+    await this.updateCards(id)
     const rta = await cost.update(changes);
     return rta;
   }
 
   // En tu lógica de negocio para crear un servicio
   async createService(data) {
+    const proyectoId = data.projectId;
     const newService = await models.Service.create(data);
 
     // Llamada a la función que actualiza el costo total del proyecto al insertar un servicio
@@ -481,7 +482,7 @@ wss.clients.forEach((client) => {
       },
     );
 
-    await this.updateCards(proyectoId)
+    await this.updateCards(id)
     return { id };
   }
 
@@ -605,7 +606,7 @@ wss.clients.forEach((client) => {
           type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
-      await this.updateCards(proyectoId)
+      await this.updateCards(id)
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
