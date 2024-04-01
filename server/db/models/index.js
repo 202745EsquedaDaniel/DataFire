@@ -24,6 +24,8 @@ const {
   NominasSemanalesSchema,
 } = require('./nominasSemanales');
 
+const { CalculosHugo, CalculosHugoSchema} = require("./calculos.models")
+
 function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
   Project.init(ProjectSchema, Project.config(sequelize));
@@ -44,6 +46,7 @@ function setupModels(sequelize) {
   Abonos.init(AbonosSchema, Abonos.config(sequelize));
   //finances
   Prestamo.init(PrestamoSchema, Prestamo.config(sequelize));
+  CalculosHugo.init(CalculosHugoSchema, CalculosHugo.config(sequelize));
 
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);

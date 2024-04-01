@@ -507,8 +507,6 @@ router.patch(
 
 router.delete(
   '/abonos/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(getAbonoSchema, 'params'),
   async (req, res, next) => {
     try {

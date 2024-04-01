@@ -5,6 +5,7 @@ const usersRouter = require('./users.router');
 const authRouter = require('./auth.router');
 const payrollsRouter = require('./payrolls.router');
 const NominasSemanalesRouter = require('./NominasSemanales.router');
+const CalculosHugoRouter = require("./CalculosHugo.router")
 
 function routerApi(app) {
   app.use('/Api/v1/proyectos', proyectosRouter),
@@ -14,6 +15,7 @@ function routerApi(app) {
     app.use('/Api/v1/payrolls', payrollsRouter),
     app.use('/Api/v1/nominasSemanales', NominasSemanalesRouter),
     app.use('/Api/v1/auth', authRouter);
+    app.use('/Api/v1/CalculosHugo', CalculosHugoRouter);
 }
 
 module.exports = routerApi;
