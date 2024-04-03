@@ -11,9 +11,10 @@ class NominasSemanalesService {
   }
 
   async findWeeklyNominasManual() {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date();
-
+    const startDate = new Date('2023-01-01'); // Fecha de inicio fija
+    let endDate = new Date(); // Fecha actual como punto de partida para el cálculo del fin de semana
+    endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); // Ajusta al último día de la semana actual (sábado, si domingo es el inicio de la semana)
+    endDate.setHours(23, 59, 59, 999); // Asegura que el fin de semana abarque todo el día
 
     const nominas = await models.NominasSemanales.findAll({
       where: {
@@ -25,7 +26,6 @@ class NominasSemanalesService {
         },
       },
       // Incluir manualmente la información del trabajador si es necesario
-      // Esto puede requerir una consulta adicional por cada nómina si no se puede hacer de manera eficiente en una sola consulta
     });
 
     if (!nominas || nominas.length === 0) {
@@ -37,35 +37,32 @@ class NominasSemanalesService {
 
     while (currentDate <= endDate) {
       const startOfWeek = new Date(currentDate);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Ajusta al domingo anterior si no es domingo
       startOfWeek.setHours(0, 0, 0, 0);
-      const endOfWeek = new Date(currentDate);
-      endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(endOfWeek.getDate() + 6); // Suma 6 días para llegar al sábado
       endOfWeek.setHours(23, 59, 59, 999);
 
       // Filtrar y procesar las nóminas para esta semana específica
-      const nominasForWeek = nominas
-        .filter((nomina) => {
-          const nominaStartDate = new Date(nomina.fecha_inicio_semana);
-          return nominaStartDate >= startOfWeek && nominaStartDate <= endOfWeek;
-        })
-        .map((nomina) => ({
-          workerId: nomina.worker_id,
-          workerName: nomina.nombre,
-          salary_hour: nomina.salary_hour,
-          horas_trabajadas: nomina.horas_trabajadas,
-          horas_extra: nomina.horas_extra,
-          salary: nomina.salary,
-          isr: nomina.isr,
-          seguro_social: nomina.seguro_social,
-          salary: nomina.salario_final,
-          startDate: nomina.fecha_inicio_semana,
-          endDate: nomina.fecha_fin_semana,
-        }));
-1
-      const totalWeeklySalary = nominasForWeek.reduce(
-        (total, nomina) => total + nomina.salary,
-        0,
-      );
+      const nominasForWeek = nominas.filter(nomina => {
+        const nominaStartDate = new Date(nomina.fecha_inicio_semana);
+        return nominaStartDate >= startOfWeek && nominaStartDate <= endOfWeek;
+      }).map(nomina => ({
+        workerId: nomina.worker_id,
+        workerName: nomina.nombre,
+        salary_hour: nomina.salary_hour,
+        horas_trabajadas: nomina.horas_trabajadas,
+        horas_extra: nomina.horas_extra,
+        salary: nomina.salary,
+        isr: nomina.isr,
+        seguro_social: nomina.seguro_social,
+        salary: nomina.salario_final,
+        startDate: nomina.fecha_inicio_semana,
+        endDate: nomina.fecha_fin_semana,
+      }));
+
+      const totalWeeklySalary = nominasForWeek.reduce((total, nomina) => total + nomina.salary, 0);
 
       weeklyNominas.push({
         startDate: startOfWeek.toISOString(),
@@ -74,11 +71,13 @@ class NominasSemanalesService {
         totalWeeklySalary,
       });
 
+      // Prepara la fecha de inicio para la siguiente iteración moviéndola al próximo domingo
       currentDate.setDate(currentDate.getDate() + 7);
     }
 
     return weeklyNominas;
   }
+
 
   async findOne(id) {
     const worker = await models.Worker.findByPk(id);
