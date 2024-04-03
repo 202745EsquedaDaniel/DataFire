@@ -299,7 +299,7 @@ router.post(
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newCustomer = await service.addCustomer(body);
+      const newCustomer = await service.addProjectCustomer(body);
       res.status(201).json(newCustomer);
     } catch (error) {
       next(error);
@@ -327,8 +327,6 @@ router.patch(
 
 router.delete(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('admin'),
   validatorHandler(getProjectSchema, 'params'),
   async (req, res, next) => {
     try {

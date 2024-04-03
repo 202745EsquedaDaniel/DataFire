@@ -107,9 +107,6 @@ class Project extends Model {
       hooks: {
         beforeCreate: async (project, options) => {
           project.costo = project.costo_inicial;
-        },
-        beforeCreate: async (project, options) => {
-          project.costo = project.costo_inicial;
 
           const start = new Date(project.fecha_inicio);
           const end = new Date(project.fecha_fin);
@@ -133,6 +130,20 @@ class Project extends Model {
             // Cambia el valor de 'status' a true
             project.status = true;
           }
+        },
+        beforeDestroy: async (project, options) => {
+          await sequelize.models.Abonos.destroy({
+            where: { proyecto_id: project.id }
+          });
+          await sequelize.models.ProjectWorker.destroy({
+            where: { project_id: project.id }
+          });
+          await sequelize.models.Service.destroy({
+            where: { project_id: project.id }
+          });
+          await sequelize.models.ProjectCustomer.destroy({
+            where: { project_id: project.id }
+          });
         },
       },
     };

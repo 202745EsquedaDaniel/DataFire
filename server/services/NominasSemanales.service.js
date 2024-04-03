@@ -12,9 +12,9 @@ class NominasSemanalesService {
 
   async findWeeklyNominasManual() {
     const startDate = new Date('2023-01-01');
-    const endDate = new Date(); // Ajusta según necesites
+    const endDate = new Date();
 
-    // Obtener todas las nóminas en el rango de fechas sin depender de la asociación
+
     const nominas = await models.NominasSemanales.findAll({
       where: {
         fecha_inicio_semana: {
@@ -50,13 +50,18 @@ class NominasSemanalesService {
         })
         .map((nomina) => ({
           workerId: nomina.worker_id,
-          // Aquí deberás ajustar cómo obtienes el nombre del trabajador, dado que no estás usando la asociación directamente
-          workerName: nomina.nombre, // Placeholder: Obtén el nombre del trabajador manualmente
+          workerName: nomina.nombre,
+          salary_hour: nomina.salary_hour,
+          horas_trabajadas: nomina.horas_trabajadas,
+          horas_extra: nomina.horas_extra,
+          salary: nomina.salary,
+          isr: nomina.isr,
+          seguro_social: nomina.seguro_social,
           salary: nomina.salario_final,
           startDate: nomina.fecha_inicio_semana,
           endDate: nomina.fecha_fin_semana,
         }));
-
+1
       const totalWeeklySalary = nominasForWeek.reduce(
         (total, nomina) => total + nomina.salary,
         0,

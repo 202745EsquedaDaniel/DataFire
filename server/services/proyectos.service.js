@@ -350,7 +350,7 @@ wss.clients.forEach((client) => {
     return projectCustomer;
   }
 
-  async addCustomer(data) {
+  async addProjectCustomer(data) {
     try {
       // Validar datos con Joi
       await addCustomerRESchema.validateAsync(data);
