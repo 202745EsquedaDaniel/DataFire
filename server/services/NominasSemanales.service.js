@@ -13,7 +13,7 @@ class NominasSemanalesService {
   async findWeeklyNominasManual() {
     const startDate = new Date('2023-01-01'); // Fecha de inicio fija
     let endDate = new Date(); // Fecha actual como punto de partida para el cálculo del fin de semana
-    endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); // Ajusta al último día de la semana actual (sábado, si domingo es el inicio de la semana)
+    endDate.setDate(endDate.getDate() + (7 - endDate.getDay())); // Ajusta al último día de la semana actual (sábado, si domingo es el inicio de la semana)
     endDate.setHours(23, 59, 59, 999); // Asegura que el fin de semana abarque todo el día
 
     const nominas = await models.NominasSemanales.findAll({
@@ -25,7 +25,6 @@ class NominasSemanalesService {
           [Op.lte]: endDate,
         },
       },
-      // Incluir manualmente la información del trabajador si es necesario
     });
 
     if (!nominas || nominas.length === 0) {
@@ -37,11 +36,11 @@ class NominasSemanalesService {
 
     while (currentDate <= endDate) {
       const startOfWeek = new Date(currentDate);
-      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Ajusta al domingo anterior si no es domingo
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
       startOfWeek.setHours(0, 0, 0, 0);
 
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(endOfWeek.getDate() + 6); // Suma 6 días para llegar al sábado
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
       endOfWeek.setHours(23, 59, 59, 999);
 
       // Filtrar y procesar las nóminas para esta semana específica
@@ -71,7 +70,6 @@ class NominasSemanalesService {
         totalWeeklySalary,
       });
 
-      // Prepara la fecha de inicio para la siguiente iteración moviéndola al próximo domingo
       currentDate.setDate(currentDate.getDate() + 7);
     }
 
