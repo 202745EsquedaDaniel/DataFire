@@ -3,9 +3,10 @@ const router = express.Router();
 const ProjectService = require('../services/proyectos.service');
 const service = new ProjectService();
 const { models } = require('../lib/sequelize');
-
+const PDFDocument = require('pdfkit');
 const passport = require('passport');
 const { checkRoles } = require('../middlewares/auth.handler');
+const { format } = require('date-fns');
 
 const validatorHandler = require('../middlewares/validator.handler');
 const {
@@ -30,6 +31,120 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/generate-pdf', (req, res) => {
+  // Crear un nuevo documento PDF
+  const doc = new PDFDocument();
+
+  // Establecer encabezados para descargar el PDF como un archivo
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=quote.pdf');
+
+  // Enviar el documento PDF al cliente
+  doc.pipe(res);
+
+  // Agregar contenido al documento
+  doc.fontSize(25).text('Esta es tu cotización!', 100, 100);
+
+  // Finalizar el documento
+  doc.end();
+});
+
+router.get('/:id/pdf', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await service.findOne(id); // Reemplaza service.findOne por tu lógica de obtención del proyecto
+
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${project.name}.pdf"`);
+
+    doc.pipe(res);
+
+    doc.fillColor('#000'); // Establece el color del texto a negro para la sección inicial
+    doc.fontSize(25).text(`Proyecto: ${project.name}`, { underline: true });
+    doc.fontSize(12).moveDown();
+    doc.text(`Fecha de Inicio: ${format(new Date(project.fecha_inicio), 'dd/MM/yyyy')}`);
+    doc.text(`Fecha de Fin: ${format(new Date(project.fecha_fin), 'dd/MM/yyyy')}`);
+    doc.text(`Duración: ${project.duracion} días`);
+    doc.text(`Costo Inicial: $${project.costo_inicial}`);
+    doc.text(`Costo Total: $${project.costo}`);
+    doc.text(`Total Abonado: $${project.abonado}`);
+    doc.text(`Pendiente: $${project.remaining}`);
+    doc.moveDown(2);
+
+    // Abonos
+    doc.fontSize(18).text('Abonos', { underline: true });
+    doc.fontSize(10).moveDown();
+    drawTable(doc, project.abonos, ['Fecha', 'Monto'], (item) => [
+      format(new Date(item.fecha_abono), 'dd/MM/yyyy'),
+      `$${item.monto}`
+    ], {
+      totalLabel: 'Total Abonado',
+      totalValue: project.abonado
+    });
+
+    doc.moveDown(2);
+
+    // Servicios
+    doc.fillColor('#000'); // Asegura que el color del texto sea negro para la sección de servicios
+    doc.fontSize(18).text('Costos', { underline: true });
+    doc.fontSize(4).moveDown();
+    drawTable(doc, project.services, ['Fecha', 'Servicio', 'Costo'], (item) => [
+      format(new Date(item.fecha_costo), 'dd/MM/yyyy'),
+      `${item.service}`,
+      `$${item.cost}`
+    ], {
+      totalLabel: 'Total ',
+      totalValue: project.costo
+    });
+
+    doc.end();
+  } catch (error) {
+    next(error);
+  }
+});
+
+function drawTable(doc, data, headers, rowMapper, options = {}) {
+  let tableTop = doc.y;
+  let colWidths = [100, 280, 100];
+  doc.fontSize(10);
+
+  // Cabecera
+  doc.fillColor('#444');
+  doc.rect(50, tableTop, sum(colWidths, 0, colWidths.length), 20).fill();
+  doc.fillColor('#fff');
+  headers.forEach((header, i) => {
+    doc.text(header, 50 + sum(colWidths, 0, i), tableTop + 6, { width: colWidths[i], align: 'center' });
+  });
+
+  // Filas
+  tableTop += 20;
+  doc.fillColor('#000');
+  data.forEach((item, index) => {
+    const row = rowMapper(item);
+    row.forEach((text, i) => {
+      doc.text(text, 50 + sum(colWidths, 0, i), tableTop + index * 20 + 6, { width: colWidths[i], align: 'center' });
+    });
+  });
+
+  // Total
+  if (options.totalLabel && options.totalValue) {
+    doc.fillColor('#000');
+    doc.rect(50, tableTop + data.length * 20 + 6, sum(colWidths, 0, colWidths.length), 20).fill();
+    doc.fillColor('#fff');
+    doc.text(options.totalLabel, 50, tableTop + data.length * 20 + 12, { width: colWidths[0], align: 'center' });
+    doc.text(`$${options.totalValue}`, 50 + sum(colWidths, 0, colWidths.length - 1), tableTop + data.length * 20 + 12, { width: colWidths[colWidths.length - 1], align: 'center' });
+  }
+}
+
+function sum(arr, start, end) {
+  let total = 0;
+  for (let i = start; i < end; i++) {
+    total += arr[i];
+  }
+  return total;
+}
 
 router.get('/projectCustomer', async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const PDFDocument = require('pdfkit');
 const { models } = require('../lib/sequelize');
 
 const NominasSemanalesService = require('../services/NominasSemanales.service');
@@ -14,6 +14,26 @@ const {
   getWorkerSchema,
   updateWorkerSchema,
 } = require('../schemas/trabajadores.schema');
+
+
+router.get('/generate-pdf', (req, res) => {
+  // Crear un nuevo documento PDF
+  const doc = new PDFDocument();
+
+  // Establecer encabezados para descargar el PDF como un archivo
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=quote.pdf');
+
+  // Enviar el documento PDF al cliente
+  doc.pipe(res);
+
+  // Agregar contenido al documento
+  doc.fontSize(25).text('Esta es tu cotización!', 100, 100);
+
+  // Finalizar el documento
+  doc.end();
+});
+
 
 router.get('/', async (req, res, next) => {
   try {
