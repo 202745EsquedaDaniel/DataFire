@@ -46,14 +46,13 @@ router.get('/generate-pdf', (req, res) => {
   // Agregar contenido al documento
   doc.fontSize(25).text('Esta es tu cotización!', 100, 100);
 
-  // Finalizar el documento
   doc.end();
 });
 
 router.get('/:id/pdf', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const project = await service.findOne(id); // Reemplaza service.findOne por tu lógica de obtención del proyecto
+    const project = await service.findOne(id);
 
     const doc = new PDFDocument();
     res.setHeader('Content-Type', 'application/pdf');
