@@ -132,9 +132,10 @@ router.put('/SalaryUpdate/:id',
 
       const salary = await service.update(id, newData);
 
-      res.json(salary);
+      res.status(201).json(salary);
 
     }catch(err){
+      console.log(err);
       next(error);
     }
   }
