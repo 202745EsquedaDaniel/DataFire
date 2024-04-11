@@ -46,6 +46,8 @@ class WorkerService {
   async update(id, changes) {
     const worker = await this.findOne(id);
 
+    console.log(worker);
+
     if (!worker) {
       throw boom.notFound('Worker not found');
     }

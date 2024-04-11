@@ -123,7 +123,7 @@ router.delete(
   },
 );
 
-router.put('/SalaryUpdate/:id', 
+router.patch('/SalaryUpdate/:id', 
   validatorHandler(updateSalaryWorkerSchema, 'params'), 
   async (req,res,next) => {
     try {
