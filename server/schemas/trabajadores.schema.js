@@ -38,6 +38,14 @@ const updateWorkerSchema = Joi.object({
   semanal_hours: semanal_hours,
 });
 
+const updateSalaryWorkerSchema = Joi.object({
+  name: name,
+  last_name: last_name,
+  age: age,
+  position: position,
+  salary: salary,
+});
+
 const getWorkerSchema = Joi.object({
   id: id.required(),
 });
@@ -45,6 +53,7 @@ const getWorkerSchema = Joi.object({
 module.exports = {
   createWorkerSchema,
   createWorkerCostSchema,
+  updateSalaryWorkerSchema,
   updateWorkerSchema,
   getWorkerSchema,
 };
