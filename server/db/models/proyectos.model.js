@@ -38,6 +38,16 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  anticipo: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  presupuesto: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
   costo: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -133,16 +143,16 @@ class Project extends Model {
         },
         beforeDestroy: async (project, options) => {
           await sequelize.models.Abonos.destroy({
-            where: { proyecto_id: project.id }
+            where: { proyecto_id: project.id },
           });
           await sequelize.models.ProjectWorker.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
           await sequelize.models.Service.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
           await sequelize.models.ProjectCustomer.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
         },
       },
