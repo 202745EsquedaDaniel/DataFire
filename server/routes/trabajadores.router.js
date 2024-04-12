@@ -124,7 +124,8 @@ router.delete(
 );
 
 router.patch('/SalaryUpdate/:id', 
-  validatorHandler(updateSalaryWorkerSchema, 'params'), 
+  validatorHandler(updateSalaryWorkerSchema, 'body'),
+  validatorHandler(getWorkerSchema, 'params'),
   async (req,res,next) => {
     try {
       const {id} = req.params;
