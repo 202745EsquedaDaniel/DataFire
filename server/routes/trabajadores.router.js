@@ -10,6 +10,7 @@ const {
   getWorkerSchema,
   updateWorkerSchema,
   createWorkerCostSchema,
+  updateSalaryWorkerSchema,
 } = require('../schemas/trabajadores.schema');
 
 router.get('/', async (req, res, next) => {
@@ -120,6 +121,24 @@ router.delete(
       next(error);
     }
   },
+);
+
+router.patch('/SalaryUpdate/:id', 
+  validatorHandler(updateSalaryWorkerSchema, 'params'), 
+  async (req,res,next) => {
+    try {
+      const {id} = req.params;
+      const newData = req.body;
+
+      const salary = await service.update(id, newData);
+
+      res.status(201).json(salary);
+
+    }catch(err){
+      console.log(err);
+      next(error);
+    }
+  }
 );
 
 module.exports = router;
