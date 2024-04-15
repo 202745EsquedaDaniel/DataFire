@@ -4,7 +4,7 @@ const { Worker, WorkerSchema } = require('./trabajadores.model');
 const { Service, ServiceSchema } = require('./servicios.model');
 const { User, UserSchema } = require('./users.model');
 const { Prestamo, PrestamoSchema } = require('./prestamos.model');
-const { WorkerCost, WorkerCostsSchema} = require("./WorkerCosts.model")
+const { WorkerCost, WorkerCostsSchema } = require('./WorkerCosts.model');
 
 const {
   ProjectCustomer,
@@ -24,7 +24,12 @@ const {
   NominasSemanalesSchema,
 } = require('./nominasSemanales');
 
-const { CalculosHugo, CalculosHugoSchema} = require("./calculos.models")
+const { CalculosHugo, CalculosHugoSchema } = require('./calculos.models');
+
+const {
+  Adjustments,
+  AdjustmentSchema,
+} = require('./adjustmentsProject.models');
 
 function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
@@ -48,11 +53,12 @@ function setupModels(sequelize) {
   Prestamo.init(PrestamoSchema, Prestamo.config(sequelize));
   CalculosHugo.init(CalculosHugoSchema, CalculosHugo.config(sequelize));
 
+  Adjustments.init(AdjustmentSchema, Adjustments.config(sequelize));
+
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
   Worker.associate(sequelize.models);
   WorkerCost.associate(sequelize.models);
-
 }
 
 module.exports = setupModels;
