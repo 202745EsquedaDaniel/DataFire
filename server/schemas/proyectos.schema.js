@@ -2,9 +2,9 @@ const Joi = require('joi');
 
 const id = Joi.number().integer();
 const name = Joi.string();
-fecha_inicio = Joi.date();
-fecha_fin = Joi.date();
-costo = Joi.number().integer();
+const fecha_inicio = Joi.date();
+const fecha_fin = Joi.date();
+const costo = Joi.number().integer();
 const project_id = Joi.number().integer();
 const customer_id = Joi.number().integer();
 const worker_id = Joi.number().integer();
@@ -13,6 +13,9 @@ const amount = Joi.number().integer();
 const service = Joi.string();
 const costo_inicial = Joi.number().integer();
 const abonado = Joi.string();
+const presupuesto = Joi.number().integer();
+const anticipo = Joi.number().integer();
+
 /** ----Abonos-- */
 const monto = Joi.number().integer();
 const fecha_abono = Joi.date();
@@ -25,6 +28,8 @@ const createProjectsSchema = Joi.object({
   fecha_inicio: fecha_inicio.required(),
   fecha_fin: fecha_fin.required(),
   costo_inicial: costo_inicial.required(),
+  presupuesto: presupuesto.required(),
+  anticipo: anticipo.required(),
 });
 
 const updateProjectSchema = Joi.object({

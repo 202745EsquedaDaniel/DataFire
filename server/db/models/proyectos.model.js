@@ -63,6 +63,13 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  ganancia: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: function () {
+      return this.getDataValue('abonado') - this.getDataValue('costo');
+    },
+  },
   status: {
     allowNull: false,
     type: DataTypes.BOOLEAN,
@@ -117,6 +124,7 @@ class Project extends Model {
       hooks: {
         beforeCreate: async (project, options) => {
           project.costo = project.costo_inicial;
+          project.abonado = project.anticipo;
 
           const start = new Date(project.fecha_inicio);
           const end = new Date(project.fecha_fin);

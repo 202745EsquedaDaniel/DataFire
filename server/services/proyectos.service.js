@@ -12,49 +12,46 @@ const WebSocket = require('ws');
 const { getWss } = require('../lib/webnsocket');
 
 class ProjectService {
+  async updateCardsWebsocket(proyectoId) {
+    const wss = getWss();
 
-async updateCardsWebsocket(proyectoId) {
-  const wss = getWss();
-
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      console.log("hola")
-    }
-  });
-
-      const updatedProjectData = await this.findOne(proyectoId);
-
-if (wss && wss.clients) {
-wss.clients.forEach((client) => {
-  if (client.readyState === WebSocket.OPEN) {
-    // Aquí enviarías el mensaje al cliente
-    client.send('¡Hola cliente!');+
-    console.log("bien hecho")
-  }
-});
-}
-
-      if (wss && wss.clients) {
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            // Asegúrate de enviar solo los datos necesarios para actualizar las vistas de las tarjetas.
-            const dataToSend = {
-              costo: updatedProjectData.costo,
-              abonado: updatedProjectData.abonado,
-              remaining: updatedProjectData.remaining,
-            };
-            console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
-            client.send(JSON.stringify(dataToSend));
-          }
-        });
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        console.log('hola');
       }
+    });
 
-      console.log('Monto abonado actualizado correctamente y notificado a los clientes.');
-}
+    const updatedProjectData = await this.findOne(proyectoId);
 
+    if (wss && wss.clients) {
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          // Aquí enviarías el mensaje al cliente
+          client.send('¡Hola cliente!');
+          +console.log('bien hecho');
+        }
+      });
+    }
 
+    if (wss && wss.clients) {
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          // Asegúrate de enviar solo los datos necesarios para actualizar las vistas de las tarjetas.
+          const dataToSend = {
+            costo: updatedProjectData.costo,
+            abonado: updatedProjectData.abonado,
+            remaining: updatedProjectData.remaining,
+          };
+          console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
+          client.send(JSON.stringify(dataToSend));
+        }
+      });
+    }
 
-
+    console.log(
+      'Monto abonado actualizado correctamente y notificado a los clientes.',
+    );
+  }
 
   // -------Project Services! -----
   async findProjects() {
@@ -440,7 +437,7 @@ wss.clients.forEach((client) => {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
-    await this.updateCardsWebsocket(id)
+    await this.updateCardsWebsocket(id);
     const rta = await cost.update(changes);
     return rta;
   }
@@ -448,7 +445,7 @@ wss.clients.forEach((client) => {
   // En tu lógica de negocio para crear un servicio
   async createService(data) {
     const proyectoId = data.project_id;
-    console.log(proyectoId)
+    console.log(proyectoId);
     const newService = await models.Service.create(data);
 
     // Llamada a la función que actualiza el costo total del proyecto al insertar un servicio
@@ -463,7 +460,7 @@ wss.clients.forEach((client) => {
       },
     );
 
-    await this.updateCardsWebsocket(proyectoId)
+    await this.updateCardsWebsocket(proyectoId);
     return newService;
   }
   async deleteService(id) {
@@ -483,7 +480,7 @@ wss.clients.forEach((client) => {
       },
     );
 
-    await this.updateCardsWebsocket(projectId)
+    await this.updateCardsWebsocket(projectId);
     return { id };
   }
 
@@ -550,13 +547,9 @@ wss.clients.forEach((client) => {
 
   async createAbono(data) {
     try {
-
       const newAbono = await Abonos.create(data);
       const nuevoMontoAbono = data.monto || 0;
       const proyectoId = data.projectId;
-
-
-
       try {
         // Actualiza el monto abonado en la base de datos
         await Abonos.sequelize.query(
@@ -570,27 +563,20 @@ wss.clients.forEach((client) => {
           },
         );
 
-          await this.updateCardsWebsocket(proyectoId)
-
-          const abonosActualizados = await this.findAbonosByProjectId(proyectoId); // Asume que esta función ya existe y devuelve todos los abonos para un proyecto específico
-
-
-
+        await this.updateCardsWebsocket(proyectoId);
       } catch (error) {
-        console.error('Error al actualizar el monto abonado y notificar a los clientes:', error);
+        console.error(
+          'Error al actualizar el monto abonado y notificar a los clientes:',
+          error,
+        );
         throw error; // Asegúrate de manejar este error adecuadamente en tu aplicación.
       }
-
-
       return newAbono;
     } catch (error) {
       console.error('Error al crear un abono:', error);
       throw error;
     }
   }
-
-
-
 
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
@@ -612,7 +598,7 @@ wss.clients.forEach((client) => {
           type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
-      await this.updateCardsWebsocket(proyectoId)
+      await this.updateCardsWebsocket(proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
