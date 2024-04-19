@@ -72,10 +72,6 @@ class Service extends Model {
           if (project) {
             project.ganancia = project.abonado - project.costo;
             await project.save();
-
-            this.sequelize.models.ProjectService.updateCardsWebsocket(
-              project.id,
-            );
           }
         },
         afterDestroy: async (service, options) => {
@@ -85,9 +81,6 @@ class Service extends Model {
           if (project) {
             project.ganancia = project.abonado - project.costo; // Actualizar la ganancia
             await project.save();
-            this.sequelize.models.ProjectService.updateCardsWebsocket(
-              project.id,
-            );
           }
         },
       },
