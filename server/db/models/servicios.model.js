@@ -65,29 +65,31 @@ class Service extends Model {
       modelName: 'Service',
       timestamps: false,
       hooks: {
-        beforeCreate: async (Service, options) => {
-          const project = await this.sequelize.models.Project.findByPk(
-            Service.projectId,
-          );
+        afterCreate: async (service, options) => {
+          const project = await service.getProject();
           if (project) {
             project.ganancia = project.abonado - project.costo;
             await project.save();
+
+            this.sequelize.models.ProjectService.updateCardsWebsocket(
+              project.id,
+            );
           }
         },
-        beforeDestroy: async (service, options) => {
-          const project = await this.sequelize.models.Project.findByPk(
-            service.projectId,
-          );
+        afterDestroy: async (service, options) => {
+          const project = await service.getProject();
           if (project) {
-            project.ganancia = project.abonado - project.costo;
+            project.ganancia = project.abonado - project.costo; // Actualizar la ganancia
             await project.save();
+            this.sequelize.models.ProjectService.updateCardsWebsocket(
+              project.id,
+            );
           }
         },
       },
     };
   }
 }
-
 module.exports = {
   SERVICES_TABLE,
   ServiceSchema,

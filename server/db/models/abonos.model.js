@@ -70,16 +70,8 @@ class Abonos extends Model {
       modelName: 'Abonos',
       timestamps: false,
       hooks: {
-        beforeCreate: async (abono, options) => {
-          const project = await this.sequelize.models.Project.findByPk(
-            abono.projectId,
-          );
-          if (project) {
-            project.ganancia = project.abonado - project.costo;
-            await project.save();
-          }
-        },
-        beforeDestroy: async (abono, options) => {
+        afterCreate: async (abono, options) => {},
+        afterDestroy: async (abono, options) => {
           const project = await this.sequelize.models.Project.findByPk(
             abono.projectId,
           );
@@ -89,6 +81,13 @@ class Abonos extends Model {
           }
         },
         afterCreate: async (abono, options) => {
+          const project = await this.sequelize.models.Project.findByPk(
+            abono.projectId,
+          );
+          if (project) {
+            project.ganancia = project.abonado - project.costo;
+            await project.save();
+          }
           setTimeout(async () => {
             console.log(abono.monto);
             const proyecto = await abono.getProject();
