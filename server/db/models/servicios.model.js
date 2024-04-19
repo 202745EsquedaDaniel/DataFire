@@ -66,7 +66,9 @@ class Service extends Model {
       timestamps: false,
       hooks: {
         afterCreate: async (service, options) => {
-          const project = await service.getProject();
+          const project = await this.sequelize.models.Project.findByPk(
+            service.project_id,
+          );
           if (project) {
             project.ganancia = project.abonado - project.costo;
             await project.save();
@@ -77,7 +79,9 @@ class Service extends Model {
           }
         },
         afterDestroy: async (service, options) => {
-          const project = await service.getProject();
+          const project = await this.sequelize.models.Project.findByPk(
+            service.project_id,
+          );
           if (project) {
             project.ganancia = project.abonado - project.costo; // Actualizar la ganancia
             await project.save();
