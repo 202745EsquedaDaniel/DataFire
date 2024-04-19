@@ -31,6 +31,8 @@ const {
   AdjustmentSchema,
 } = require('./adjustmentsProject.models');
 
+const { Tools, ToolsSchema } = require('./tools.model');
+
 function setupModels(sequelize) {
   Customer.init(CustomerSchema, Customer.config(sequelize));
   Project.init(ProjectSchema, Project.config(sequelize));
@@ -54,6 +56,7 @@ function setupModels(sequelize) {
   CalculosHugo.init(CalculosHugoSchema, CalculosHugo.config(sequelize));
 
   Adjustments.init(AdjustmentSchema, Adjustments.config(sequelize));
+  Tools.init(ToolsSchema, Tools.config(sequelize));
 
   Project.associate(sequelize.models);
   Abonos.associate(sequelize.models);
