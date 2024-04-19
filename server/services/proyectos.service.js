@@ -563,7 +563,7 @@ class ProjectService {
             type: Abonos.sequelize.QueryTypes.SELECT,
           },
         );
-
+        data.ganancia = data.abonado - data.abonado;
         await this.updateCardsWebsocket(proyectoId);
       } catch (error) {
         console.error(
