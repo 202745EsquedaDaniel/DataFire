@@ -26,9 +26,9 @@ class ProjectService {
     if (wss && wss.clients) {
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-          // Aquí enviarías el mensaje al cliente
-          client.send('¡Hola cliente!');
-          +console.log('bien hecho');
+          // // Aquí enviarías el mensaje al cliente
+          // client.send('¡Hola cliente!');
+          // +console.log('bien hecho');
         }
       });
     }
@@ -40,7 +40,7 @@ class ProjectService {
           const dataToSend = {
             costo: updatedProjectData.costo,
             abonado: updatedProjectData.abonado,
-            remaining: updatedProjectData.ganancia,
+            ganancia: updatedProjectData.ganancia,
             presupuesto: updatedProjectData.presupuesto,
           };
           console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
@@ -480,7 +480,6 @@ class ProjectService {
         type: models.Service.sequelize.QueryTypes.SELECT,
       },
     );
-
     await this.updateCardsWebsocket(projectId);
     return { id };
   }
@@ -538,6 +537,7 @@ class ProjectService {
         },
       );
 
+      await this.updateCardsWebsocket(data.proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
@@ -563,7 +563,7 @@ class ProjectService {
             type: Abonos.sequelize.QueryTypes.SELECT,
           },
         );
-        data.ganancia = data.abonado - data.abonado;
+
         await this.updateCardsWebsocket(proyectoId);
       } catch (error) {
         console.error(
