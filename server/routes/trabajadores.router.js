@@ -55,22 +55,6 @@ router.get(
   },
 );
 
-router.patch(
-  '/SalaryUpdate/:id',
-  validatorHandler(getWorkerSchema, 'params'),
-  validatorHandler(updateSalaryWorkerSchema, 'body'),
-  async (req, res, next) => {
-    try {
-      const newData = req.body;
-      const { id } = req.params;
-      const salary = await service.update(id, newData);
-      res.status(201).json(salary);
-    } catch (err) {
-      console.log(err);
-      next(error);
-    }
-  },
-);
 
 router.post(
   '/',
@@ -189,7 +173,7 @@ router.patch(
       res.status(201).json(salary);
     } catch (err) {
       console.log(err);
-      next(error);
+      next(err);
     }
   },
 );

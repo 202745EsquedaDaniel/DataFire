@@ -70,8 +70,7 @@ class Abonos extends Model {
       modelName: 'Abonos',
       timestamps: false,
       hooks: {
-        afterCreate: async (abono, options) => {},
-        afterDestroy: async (abono, options) => {
+        afterDestroy: async (abono, ) => {
           const project = await this.sequelize.models.Project.findByPk(
             abono.projectId,
           );
@@ -80,7 +79,7 @@ class Abonos extends Model {
             await project.save();
           }
         },
-        afterCreate: async (abono, options) => {
+        afterCreate: async (abono, ) => {
           const project = await this.sequelize.models.Project.findByPk(
             abono.projectId,
           );
