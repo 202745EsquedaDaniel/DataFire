@@ -57,7 +57,7 @@ class Tools extends Model {
       modelName: 'tools',
       timestamps: false,
       hooks: {
-        afterCreate: async (workerCost, options) => {
+        afterCreate: async (workerCost, ) => {
           const worker = await this.sequelize.models.Worker.findByPk(
             workerCost.worker_id,
           );
@@ -66,7 +66,7 @@ class Tools extends Model {
             await worker.save();
           }
         },
-        beforeDestroy: async (workerCost, options) => {
+        beforeDestroy: async (workerCost, ) => {
           const worker = await this.sequelize.models.Worker.findByPk(
             workerCost.worker_id,
           );
@@ -75,7 +75,7 @@ class Tools extends Model {
             await worker.save();
           }
         },
-        beforeUpdate: async (workerCost, options) => {
+        beforeUpdate: async (workerCost,) => {
           const worker = await this.sequelize.models.Worker.findByPk(
             workerCost.worker_id,
           );

@@ -78,8 +78,10 @@ class Worker extends Model {
       modelName: 'Worker',
       timestamps: false,
       hooks: {
-        beforeSave: (worker, options) => {
-          worker.salary = worker.salary_hour * worker.semanal_hours;
+        beforeSave: (worker) => {
+           
+            worker.salary
+          
         },
       },
     };

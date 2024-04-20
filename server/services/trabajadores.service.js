@@ -1,6 +1,6 @@
-const { faker } = require('@faker-js/faker');
+
 const boom = require('@hapi/boom');
-const { create } = require('../schemas/trabajadores.schema');
+
 const { models } = require('../lib/sequelize');
 
 class WorkerService {
@@ -18,7 +18,7 @@ class WorkerService {
     const rta = await models.WorkerCost.findAll();
     return rta;
   }
-  d;
+ 
 
   async findOne(id) {
     const worker = await models.Worker.findByPk(id, {
@@ -38,13 +38,7 @@ class WorkerService {
     return worker;
   }
 
-  async findOneTool(id) {
-    const worker = await models.tools.findByPk(id);
-    if (!worker) {
-      throw boom.notFound('Worker not found');
-    }
-    return worker;
-  }
+  
 
   async create(data) {
     const newWorker = await models.Worker.create(data);
@@ -56,7 +50,7 @@ class WorkerService {
     return newWorker;
   }
 
-  async createTools(data) {
+  async createTool(data) {
     const tool = await models.tools.create(data);
     return tool;
   }
