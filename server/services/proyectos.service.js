@@ -300,6 +300,53 @@ class ProjectService {
     return weeklyAbonos;
   }
 
+  // funcion para egresos
+  // no sirve
+  async findEgresos() {
+    try{
+    const nomina = await  models.Nomina.findAll({
+      include: [{
+        model: models.Worker,
+        as: 'worker',
+        attributes : ['name', 'last_name', 'salary', 'WorkerCost']
+      },
+      {
+        model: models.nominas_semanales,
+        as: 'weeklypayroll',
+        attributes: ['isr', 'seguro_social', 'salario_final']
+      },
+      {
+        model: models.WorkerCosts,
+        as: 'workercosts',
+        attributes: ['service', 'cost', 'fecha_costo']  
+      }
+      ],
+      attributes: ['payment_dates', 'amount_paid', 'payment_dates']
+    });
+
+    
+    const nominafind = nomina.map((nomina) => {
+     return {
+      fecha_pago:nomina.payment_dates,
+      nombre_empleado: nomina.Worker.name,
+      sueldo: nomina.worker.salary,
+      monto_pagado: nomina.amount_paid,
+      isr: nomina.weeklypayroll.isr,
+      ss: nomina.weeklypayroll.seguro_social,
+      servicios: nomina.workercosts.service,
+      costo_servicio: nomina.workercosts.cost,
+      fecha_costo: nomina.workercosts.fecha_costo
+     };
+    
+    });
+     return nominafind;
+  }catch(err){
+    console.error('Error fetching payrolls:', err);
+    throw err;
+  }
+
+  }
+
   async update(id, changes) {
     const project = await this.findOne(id);
 

@@ -85,7 +85,7 @@ class NominasSemanales extends Model {
       modelName: 'NominasSemanales',
       timestamps: false,
       hooks: {
-        beforeCreate: (nominasSemanales, options) => {
+        beforeCreate: (nominasSemanales) => {
           const salarioBase =
             nominasSemanales.salary_hour * nominasSemanales.horas_trabajadas;
           const salarioExtra =
