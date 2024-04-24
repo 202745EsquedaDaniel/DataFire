@@ -66,9 +66,7 @@ const ProjectSchema = {
   ganancia: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    defaultValue: function () {
-      return this.getDataValue('abonado') - this.getDataValue('costo');
-    },
+    defaultValue: 0,
   },
   status: {
     allowNull: false,
@@ -133,6 +131,7 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
+          project.ganancia = project.abonado - project.costo;
         },
         beforeUpdate: async (project, options) => {
           // Calcula la duración en semanas antes de la actualización
@@ -142,12 +141,13 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
-
+          project.ganancia = project.abonado - project.costo;
           // Verifica si 'remaining' se actualiza y es igual a 0
           if (project.changed('remaining') && project.remaining === 0) {
             // Cambia el valor de 'status' a true
             project.status = true;
           }
+
         },
         beforeDestroy: async (project, options) => {
           await sequelize.models.Abonos.destroy({
