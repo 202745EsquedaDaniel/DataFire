@@ -41,7 +41,7 @@ wss.clients.forEach((client) => {
             const dataToSend = {
               costo: updatedProjectData.costo,
               abonado: updatedProjectData.abonado,
-              remaining: updatedProjectData.remaining,
+              ganancia: updatedProjectData.anticipo
             };
             console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
             client.send(JSON.stringify(dataToSend));
@@ -572,7 +572,7 @@ wss.clients.forEach((client) => {
 
           await this.updateCardsWebsocket(proyectoId)
 
-          const abonosActualizados = await this.findAbonosByProjectId(proyectoId); // Asume que esta función ya existe y devuelve todos los abonos para un proyecto específico
+
 
 
 
