@@ -317,38 +317,13 @@ class ProjectService {
   // no sirve
   async findEgresos() {
     try{
-    const nomina = await  models.Nomina.findAll({
-      include: [{
-        model: models.Worker,
-        as: 'worker',
-        attributes : ['name', 'last_name', 'salary', 'WorkerCost']
-      },
-      {
-        model: models.nominas_semanales,
-        as: 'weeklypayroll',
-        attributes: ['isr', 'seguro_social', 'salario_final']
-      },
-      {
-        model: models.WorkerCosts,
-        as: 'workercosts',
-        attributes: ['service', 'cost', 'fecha_costo']
-      }
-      ],
-      attributes: ['payment_dates', 'amount_paid', 'payment_dates']
-    });
+    const nomina = await  models.Nomina.findAll();
 
 
     const nominafind = nomina.map((nomina) => {
      return {
       fecha_pago:nomina.payment_dates,
-      nombre_empleado: nomina.Worker.name,
-      sueldo: nomina.worker.salary,
       monto_pagado: nomina.amount_paid,
-      isr: nomina.weeklypayroll.isr,
-      ss: nomina.weeklypayroll.seguro_social,
-      servicios: nomina.workercosts.service,
-      costo_servicio: nomina.workercosts.cost,
-      fecha_costo: nomina.workercosts.fecha_costo
      };
 
     });
@@ -498,6 +473,7 @@ class ProjectService {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
+    console.log('cost:',cost)
     await this.updateCardsWebsocket(id);
     const rta = await cost.update(changes);
     return rta;
@@ -552,7 +528,8 @@ class ProjectService {
       const totalCostOfServices = await models.Service.sum('cost', {
         where: { project_id: projectId },
       });
-
+      console.log(totalCostOfServices )
+      console.log(project.costo)
       // Si es el primer servicio, agrega el costo inicial del proyecto
       const totalCost = totalCostOfServices + project.costo;
 
@@ -597,7 +574,7 @@ class ProjectService {
         },
       );
 
-      await this.updateCardsWebsocket(data.proyectoId);
+      await this.updateCardsWebsocket(abono.proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
