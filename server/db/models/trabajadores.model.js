@@ -79,9 +79,12 @@ class Worker extends Model {
       timestamps: false,
       hooks: {
         beforeSave: (worker) => {
-           
-            worker.salary
-          
+          worker.salary
+          if(worker.salary != 0){
+            var diario = worker.salary / 7
+            worker.salary_hour = diario
+          }
+ 
         },
       },
     };
