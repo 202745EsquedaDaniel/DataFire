@@ -38,6 +38,16 @@ const ProjectSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  anticipo: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  presupuesto: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
   costo: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -49,6 +59,11 @@ const ProjectSchema = {
     defaultValue: 0,
   },
   remaining: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  ganancia: {
     allowNull: false,
     type: DataTypes.INTEGER,
     defaultValue: 0,
@@ -107,6 +122,7 @@ class Project extends Model {
       hooks: {
         beforeCreate: async (project, options) => {
           project.costo = project.costo_inicial;
+          project.abonado = project.anticipo;
 
           const start = new Date(project.fecha_inicio);
           const end = new Date(project.fecha_fin);
@@ -115,6 +131,7 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
+          project.ganancia = project.abonado - project.costo;
         },
         beforeUpdate: async (project, options) => {
           // Calcula la duración en semanas antes de la actualización
@@ -124,25 +141,26 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
-
+          project.ganancia = project.abonado - project.costo;
           // Verifica si 'remaining' se actualiza y es igual a 0
           if (project.changed('remaining') && project.remaining === 0) {
             // Cambia el valor de 'status' a true
             project.status = true;
           }
+
         },
         beforeDestroy: async (project, options) => {
           await sequelize.models.Abonos.destroy({
-            where: { proyecto_id: project.id }
+            where: { proyecto_id: project.id },
           });
           await sequelize.models.ProjectWorker.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
           await sequelize.models.Service.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
           await sequelize.models.ProjectCustomer.destroy({
-            where: { project_id: project.id }
+            where: { project_id: project.id },
           });
         },
       },

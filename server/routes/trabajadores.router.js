@@ -10,6 +10,8 @@ const {
   getWorkerSchema,
   updateWorkerSchema,
   createWorkerCostSchema,
+  updateSalaryWorkerSchema,
+  createToolSchema,
 } = require('../schemas/trabajadores.schema');
 
 router.get('/', async (req, res, next) => {
@@ -30,6 +32,15 @@ router.get('/WorkerCosts', async (req, res, next) => {
   }
 });
 
+router.get('/tools', async (req, res, next) => {
+  try {
+    const workers = await service.findTools();
+    res.json(workers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get(
   '/:id',
   validatorHandler(getWorkerSchema, 'params'),
@@ -44,9 +55,9 @@ router.get(
   },
 );
 
+
 router.post(
   '/',
-
   validatorHandler(createWorkerSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -74,10 +85,22 @@ router.post(
   },
 );
 
+router.post(
+  '/tools',
+  validatorHandler(createToolSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newTool = await service.createTools(body);
+      res.status(201).json(newTool);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 router.patch(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles('user', 'admin'),
   validatorHandler(updateWorkerSchema, 'body'),
   validatorHandler(getWorkerSchema, 'params'),
   async (req, res, next) => {
@@ -122,4 +145,36 @@ router.delete(
   },
 );
 
+router.delete(
+  '/tools/:id',
+  validatorHandler(getWorkerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.deleteTools(id);
+      res.status(201).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.patch(
+  '/SalaryUpdate/:id',
+  validatorHandler(updateSalaryWorkerSchema, 'body'),
+  validatorHandler(getWorkerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const newData = req.body;
+
+      const salary = await service.update(id, newData);
+
+      res.status(201).json(salary);
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
+  },
+);
 module.exports = router;

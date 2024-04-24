@@ -12,12 +12,12 @@ const NominasSemanalesSchema = {
   },
   fecha_inicio_semana: {
     allowNull: false,
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     comment: 'Fecha de inicio de la semana de pago',
   },
   fecha_fin_semana: {
     allowNull: false,
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     comment: 'Fecha de fin de la semana de pago',
   },
   worker_id: {
@@ -85,7 +85,7 @@ class NominasSemanales extends Model {
       modelName: 'NominasSemanales',
       timestamps: false,
       hooks: {
-        beforeCreate: (nominasSemanales, options) => {
+        beforeCreate: (nominasSemanales) => {
           const salarioBase =
             nominasSemanales.salary_hour * nominasSemanales.horas_trabajadas;
           const salarioExtra =

@@ -131,7 +131,7 @@ class ProjectWorker extends Model {
       modelName: 'ProjectWorker',
       timestamps: false,
       hooks: {
-        afterCreate: async (projectWorker, options) => {
+        afterCreate: async (projectWorker, ) => {
           await ProjectWorker.calculateNomina(projectWorker);
         },
       },

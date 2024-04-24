@@ -12,49 +12,47 @@ const WebSocket = require('ws');
 const { getWss } = require('../lib/webnsocket');
 
 class ProjectService {
+  async updateCardsWebsocket(proyectoId) {
+    const wss = getWss();
 
-async updateCardsWebsocket(proyectoId) {
-  const wss = getWss();
-
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      console.log("hola")
-    }
-  });
-
-      const updatedProjectData = await this.findOne(proyectoId);
-
-if (wss && wss.clients) {
-wss.clients.forEach((client) => {
-  if (client.readyState === WebSocket.OPEN) {
-    // Aquí enviarías el mensaje al cliente
-    client.send('¡Hola cliente!');+
-    console.log("bien hecho")
-  }
-});
-}
-
-      if (wss && wss.clients) {
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            // Asegúrate de enviar solo los datos necesarios para actualizar las vistas de las tarjetas.
-            const dataToSend = {
-              costo: updatedProjectData.costo,
-              abonado: updatedProjectData.abonado,
-              ganancia: updatedProjectData.anticipo
-            };
-            console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
-            client.send(JSON.stringify(dataToSend));
-          }
-        });
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        console.log('hola');
       }
+    });
 
-      console.log('Monto abonado actualizado correctamente y notificado a los clientes.');
-}
+    const updatedProjectData = await this.findOne(proyectoId);
 
+    if (wss && wss.clients) {
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          // // Aquí enviarías el mensaje al cliente
+          // client.send('¡Hola cliente!');
+          // +console.log('bien hecho');
+        }
+      });
+    }
 
+    if (wss && wss.clients) {
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          // Asegúrate de enviar solo los datos necesarios para actualizar las vistas de las tarjetas.
+          const dataToSend = {
+            costo: updatedProjectData.costo,
+            abonado: updatedProjectData.abonado,
+            ganancia: updatedProjectData.ganancia,
+            presupuesto: updatedProjectData.presupuesto,
+          };
+          console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
+          client.send(JSON.stringify(dataToSend));
+        }
+      });
+    }
 
-
+    console.log(
+      'Monto abonado actualizado correctamente y notificado a los clientes.',
+    );
+  }
 
   // -------Project Services! -----
   async findProjects() {
@@ -302,6 +300,53 @@ wss.clients.forEach((client) => {
     return weeklyAbonos;
   }
 
+  // funcion para egresos
+  // no sirve
+  async findEgresos() {
+    try{
+    const nomina = await  models.Nomina.findAll({
+      include: [{
+        model: models.Worker,
+        as: 'worker',
+        attributes : ['name', 'last_name', 'salary', 'WorkerCost']
+      },
+      {
+        model: models.nominas_semanales,
+        as: 'weeklypayroll',
+        attributes: ['isr', 'seguro_social', 'salario_final']
+      },
+      {
+        model: models.WorkerCosts,
+        as: 'workercosts',
+        attributes: ['service', 'cost', 'fecha_costo']
+      }
+      ],
+      attributes: ['payment_dates', 'amount_paid', 'payment_dates']
+    });
+
+
+    const nominafind = nomina.map((nomina) => {
+     return {
+      fecha_pago:nomina.payment_dates,
+      nombre_empleado: nomina.Worker.name,
+      sueldo: nomina.worker.salary,
+      monto_pagado: nomina.amount_paid,
+      isr: nomina.weeklypayroll.isr,
+      ss: nomina.weeklypayroll.seguro_social,
+      servicios: nomina.workercosts.service,
+      costo_servicio: nomina.workercosts.cost,
+      fecha_costo: nomina.workercosts.fecha_costo
+     };
+
+    });
+     return nominafind;
+  }catch(err){
+    console.error('Error fetching payrolls:', err);
+    throw err;
+  }
+
+  }
+
   async update(id, changes) {
     const project = await this.findOne(id);
 
@@ -440,7 +485,7 @@ wss.clients.forEach((client) => {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
-    await this.updateCardsWebsocket(id)
+    await this.updateCardsWebsocket(id);
     const rta = await cost.update(changes);
     return rta;
   }
@@ -448,7 +493,7 @@ wss.clients.forEach((client) => {
   // En tu lógica de negocio para crear un servicio
   async createService(data) {
     const proyectoId = data.project_id;
-    console.log(proyectoId)
+    console.log(proyectoId);
     const newService = await models.Service.create(data);
 
     // Llamada a la función que actualiza el costo total del proyecto al insertar un servicio
@@ -463,7 +508,7 @@ wss.clients.forEach((client) => {
       },
     );
 
-    await this.updateCardsWebsocket(proyectoId)
+    await this.updateCardsWebsocket(proyectoId);
     return newService;
   }
   async deleteService(id) {
@@ -482,8 +527,7 @@ wss.clients.forEach((client) => {
         type: models.Service.sequelize.QueryTypes.SELECT,
       },
     );
-
-    await this.updateCardsWebsocket(projectId)
+    await this.updateCardsWebsocket(projectId);
     return { id };
   }
 
@@ -540,6 +584,7 @@ wss.clients.forEach((client) => {
         },
       );
 
+      await this.updateCardsWebsocket(data.proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
@@ -550,13 +595,9 @@ wss.clients.forEach((client) => {
 
   async createAbono(data) {
     try {
-
       const newAbono = await Abonos.create(data);
       const nuevoMontoAbono = data.monto || 0;
       const proyectoId = data.projectId;
-
-
-
       try {
         // Actualiza el monto abonado en la base de datos
         await Abonos.sequelize.query(
@@ -577,20 +618,18 @@ wss.clients.forEach((client) => {
 
 
       } catch (error) {
-        console.error('Error al actualizar el monto abonado y notificar a los clientes:', error);
+        console.error(
+          'Error al actualizar el monto abonado y notificar a los clientes:',
+          error,
+        );
         throw error; // Asegúrate de manejar este error adecuadamente en tu aplicación.
       }
-
-
       return newAbono;
     } catch (error) {
       console.error('Error al crear un abono:', error);
       throw error;
     }
   }
-
-
-
 
   async deleteAbono(id) {
     const abono = await this.findOneAbono(id);
@@ -612,7 +651,7 @@ wss.clients.forEach((client) => {
           type: Abonos.sequelize.QueryTypes.SELECT,
         },
       );
-      await this.updateCardsWebsocket(proyectoId)
+      await this.updateCardsWebsocket(proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);

@@ -10,7 +10,7 @@ function setupWebSocketServer(server) {
     ws.on('message', (message) => {
       console.log('Mensaje recibido: %s', message);
     });
-    ws.send('Hola desde el back');
+    // ws.send('Hola desde el back');
   });
 }
 

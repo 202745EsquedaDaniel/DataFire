@@ -41,11 +41,10 @@ const WorkerSchema = {
     type: DataTypes.FLOAT,
     defaultValue: 0, // Asegura que siempre haya un valor por defecto
   },
-  WorkerCost:{
+  WorkerCost: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    defaultValue: 0
-
+    defaultValue: 0,
   },
   createdAt: {
     allowNull: false,
@@ -70,7 +69,6 @@ class Worker extends Model {
       as: 'WorkerCosts',
       foreignKey: 'worker_id',
     });
-
   }
 
   static config(sequelize) {
@@ -80,8 +78,10 @@ class Worker extends Model {
       modelName: 'Worker',
       timestamps: false,
       hooks: {
-        beforeSave: (worker, options) => {
-          worker.salary = worker.salary_hour * worker.semanal_hours;
+        beforeSave: (worker) => {
+           
+            worker.salary
+          
         },
       },
     };

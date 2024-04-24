@@ -56,15 +56,25 @@ router.get('/:id/pdf', async (req, res, next) => {
 
     const doc = new PDFDocument();
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${project.name}.pdf"`);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${project.name}.pdf"`,
+    );
 
     doc.pipe(res);
 
     doc.fillColor('#000'); // Establece el color del texto a negro para la sección inicial
     doc.fontSize(25).text(`Proyecto: ${project.name}`, { underline: true });
     doc.fontSize(12).moveDown();
-    doc.text(`Fecha de Inicio: ${format(new Date(project.fecha_inicio), 'dd/MM/yyyy')}`);
-    doc.text(`Fecha de Fin: ${format(new Date(project.fecha_fin), 'dd/MM/yyyy')}`);
+    doc.text(
+      `Fecha de Inicio: ${format(
+        new Date(project.fecha_inicio),
+        'dd/MM/yyyy',
+      )}`,
+    );
+    doc.text(
+      `Fecha de Fin: ${format(new Date(project.fecha_fin), 'dd/MM/yyyy')}`,
+    );
     doc.text(`Duración: ${project.duracion} días`);
     doc.text(`Costo Inicial: $${project.costo_inicial}`);
     doc.text(`Costo Total: $${project.costo}`);
@@ -75,28 +85,39 @@ router.get('/:id/pdf', async (req, res, next) => {
     // Abonos
     doc.fontSize(18).text('Abonos', { underline: true });
     doc.fontSize(10).moveDown();
-    drawTable(doc, project.abonos, ['Fecha', 'Monto'], (item) => [
-      format(new Date(item.fecha_abono), 'dd/MM/yyyy'),
-      `$${item.monto}`
-    ], {
-      totalLabel: 'Total Abonado',
-      totalValue: project.abonado
-    });
+    drawTable(
+      doc,
+      project.abonos,
+      ['Fecha', 'Monto'],
+      (item) => [
+        format(new Date(item.fecha_abono), 'dd/MM/yyyy'),
+        `$${item.monto}`,
+      ],
+      {
+        totalLabel: 'Total Abonado',
+        totalValue: project.abonado,
+      },
+    );
 
     doc.moveDown(2);
 
-    // Servicios
-    doc.fillColor('#000'); // Asegura que el color del texto sea negro para la sección de servicios
+    doc.fillColor('#000');
     doc.fontSize(18).text('Costos', { underline: true });
     doc.fontSize(4).moveDown();
-    drawTable(doc, project.services, ['Fecha', 'Servicio', 'Costo'], (item) => [
-      format(new Date(item.fecha_costo), 'dd/MM/yyyy'),
-      `${item.service}`,
-      `$${item.cost}`
-    ], {
-      totalLabel: 'Total ',
-      totalValue: project.costo
-    });
+    drawTable(
+      doc,
+      project.services,
+      ['Fecha', 'Servicio', 'Costo'],
+      (item) => [
+        format(new Date(item.fecha_costo), 'dd/MM/yyyy'),
+        `${item.service}`,
+        `$${item.cost}`,
+      ],
+      {
+        totalLabel: 'Total ',
+        totalValue: project.costo,
+      },
+    );
 
     doc.end();
   } catch (error) {
@@ -114,7 +135,10 @@ function drawTable(doc, data, headers, rowMapper, options = {}) {
   doc.rect(50, tableTop, sum(colWidths, 0, colWidths.length), 20).fill();
   doc.fillColor('#fff');
   headers.forEach((header, i) => {
-    doc.text(header, 50 + sum(colWidths, 0, i), tableTop + 6, { width: colWidths[i], align: 'center' });
+    doc.text(header, 50 + sum(colWidths, 0, i), tableTop + 6, {
+      width: colWidths[i],
+      align: 'center',
+    });
   });
 
   // Filas
@@ -123,17 +147,35 @@ function drawTable(doc, data, headers, rowMapper, options = {}) {
   data.forEach((item, index) => {
     const row = rowMapper(item);
     row.forEach((text, i) => {
-      doc.text(text, 50 + sum(colWidths, 0, i), tableTop + index * 20 + 6, { width: colWidths[i], align: 'center' });
+      doc.text(text, 50 + sum(colWidths, 0, i), tableTop + index * 20 + 6, {
+        width: colWidths[i],
+        align: 'center',
+      });
     });
   });
 
   // Total
   if (options.totalLabel && options.totalValue) {
     doc.fillColor('#000');
-    doc.rect(50, tableTop + data.length * 20 + 6, sum(colWidths, 0, colWidths.length), 20).fill();
+    doc
+      .rect(
+        50,
+        tableTop + data.length * 20 + 6,
+        sum(colWidths, 0, colWidths.length),
+        20,
+      )
+      .fill();
     doc.fillColor('#fff');
-    doc.text(options.totalLabel, 50, tableTop + data.length * 20 + 12, { width: colWidths[0], align: 'center' });
-    doc.text(`$${options.totalValue}`, 50 + sum(colWidths, 0, colWidths.length - 1), tableTop + data.length * 20 + 12, { width: colWidths[colWidths.length - 1], align: 'center' });
+    doc.text(options.totalLabel, 50, tableTop + data.length * 20 + 12, {
+      width: colWidths[0],
+      align: 'center',
+    });
+    doc.text(
+      `$${options.totalValue}`,
+      50 + sum(colWidths, 0, colWidths.length - 1),
+      tableTop + data.length * 20 + 12,
+      { width: colWidths[colWidths.length - 1], align: 'center' },
+    );
   }
 }
 
