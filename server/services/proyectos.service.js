@@ -300,6 +300,19 @@ class ProjectService {
     return weeklyAbonos;
   }
 
+  async findAdustments() {
+    const rta = await models.Adjustments.findAll();
+    return rta;
+  }
+
+  async findOneAdjustment(id) {
+    const calculo = await models.Adjustments.findByPk(id);
+    if (!calculo) {
+      throw boom.notFound('Customer not found');
+    }
+    return calculo;
+  }
+
   // funcion para egresos
   // no sirve
   async findEgresos() {
@@ -663,6 +676,31 @@ class ProjectService {
   async createPrestamo(data) {
     const nuevoPrestamo = await models.Prestamo.create(data);
     return nuevoPrestamo;
+  }
+
+  //adjustments
+
+  async createAdjustment(data) {
+    const newCalculo = await models.Adjustments.create(data);
+
+    const proyectoId = data.projectId;
+    this.updateCardsWebsocket(proyectoId)
+    console.log(proyectoId)
+
+    return newCalculo;
+  }
+
+  async updateAdjustment(id, changes) {
+    const calculo = await this.findOneAdjustment(id);
+    const rta = await calculo.update(changes);
+    return rta;
+  }
+
+  async deleteAdjustment(id) {
+    const calculo = await this.findOneAdjustment(id);
+    await calculo.destroy();
+
+    return { id };
   }
 }
 
