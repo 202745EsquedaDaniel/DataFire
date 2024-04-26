@@ -35,6 +35,11 @@ const WorkerSchema = {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  years_worked: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
   // Columna de salario que almacena el resultado de salary_hour * hours_worked
   salary: {
     allowNull: false,
