@@ -8,7 +8,7 @@ class AdjustmentsService {
   }
 
   async findOne(id) {
-    const calculo = await models.CalculosHugoService.findByPk(id);
+    const calculo = await models.Adjustments.findByPk(id);
     if (!calculo) {
       throw boom.notFound('Customer not found');
     }

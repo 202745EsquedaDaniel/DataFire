@@ -1,6 +1,5 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const { startOfWeek, endOfWeek, eachWeekOfInterval } = require('date-fns');
 
 const { CUSTOMER_TABLE } = require('./cliente.model');
 
@@ -66,9 +65,7 @@ const ProjectSchema = {
   ganancia: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    defaultValue: function () {
-      return this.getDataValue('abonado') - this.getDataValue('costo');
-    },
+    defaultValue: 0,
   },
   status: {
     allowNull: false,
@@ -113,6 +110,10 @@ class Project extends Model {
       as: 'services',
       foreignKey: 'project_id',
     });
+    this.hasMany(models.Adjustments,{
+      as: 'adjustments',
+      foreignKey: 'projectId',
+    })
   }
 
   static config(sequelize) {
@@ -122,7 +123,7 @@ class Project extends Model {
       modelname: 'project',
       timestamps: false,
       hooks: {
-        beforeCreate: async (project, options) => {
+        beforeCreate: async (project, ) => {
           project.costo = project.costo_inicial;
           project.abonado = project.anticipo;
 
@@ -134,7 +135,7 @@ class Project extends Model {
           );
           project.duracion = durationInWeeks;
         },
-        beforeUpdate: async (project, options) => {
+        beforeUpdate: async (project, ) => {
           // Calcula la duración en semanas antes de la actualización
           const start = new Date(project.fecha_inicio);
           const end = new Date(project.fecha_fin);
@@ -142,14 +143,14 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
-
+          
           // Verifica si 'remaining' se actualiza y es igual a 0
           if (project.changed('remaining') && project.remaining === 0) {
             // Cambia el valor de 'status' a true
             project.status = true;
           }
         },
-        beforeDestroy: async (project, options) => {
+        beforeDestroy: async (project,) => {
           await sequelize.models.Abonos.destroy({
             where: { proyecto_id: project.id },
           });
@@ -162,6 +163,13 @@ class Project extends Model {
           await sequelize.models.ProjectCustomer.destroy({
             where: { project_id: project.id },
           });
+
+          await sequelize.models.Adjustments.destroy({
+            where: { projectId: project.id },
+          });
+        
+
+         
         },
       },
     };

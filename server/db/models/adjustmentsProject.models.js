@@ -1,6 +1,6 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 const { PROJECT_TABLE } = require('./proyectos.model');
-const { CUSTOMER_TABLE } = require('./cliente.model');
+
 
 const ADJUSTMENTS_TABLE = 'Adjustments';
 
@@ -14,6 +14,7 @@ const AdjustmentSchema = {
   monto: {
     allowNull: false,
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
   fecha_ajuste: {
     allowNull: false,
@@ -39,6 +40,7 @@ const AdjustmentSchema = {
     allowNull: false,
     type: DataTypes.BOOLEAN,
     default: false,
+    defaultValue: 0,
     //true sera suma al presupuesto
     //false sera resta al presupuesto
   },
@@ -65,19 +67,16 @@ class Adjustments extends Model {
       modelName: 'Adjustments',
       timestamps: false,
       hooks: {
-        afterCreate: async (abono, options) => {
-          setTimeout(async () => {
-            console.log(abono.monto);
-            const proyecto = await abono.getProject();
-            if (proyecto.remaining === 0) {
-              proyecto.status = true;
-              await proyecto.save(); // Guarda los cambios en la base de datos
-            } else {
-              proyecto.status = false;
-              await proyecto.save();
-            }
-          }, 2000); // 2000 milisegundos = 2 segundos
-        },
+        afterCreate:  async (adjustment) => {
+          const project = await sequelize.models.Project.findByPk(
+            adjustment.projectId,
+          );
+          if (project) {
+            let newBudget = adjustment.operation
+              ? project.presupuesto + adjustment.monto
+              : project.presupuesto - adjustment.monto;
+            await project.update({ presupuesto: newBudget });
+          }},
       },
     };
   }

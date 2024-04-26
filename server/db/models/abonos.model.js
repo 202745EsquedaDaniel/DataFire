@@ -70,7 +70,7 @@ class Abonos extends Model {
       modelName: 'Abonos',
       timestamps: false,
       hooks: {
-        afterCreate: async (abono, options) => {
+        afterCreate: async (abono,) => {
           setTimeout(async () => {
             console.log(abono.monto);
             const proyecto = await abono.getProject();

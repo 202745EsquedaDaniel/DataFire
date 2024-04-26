@@ -9,6 +9,11 @@ class WorkerService {
     return rta;
   }
 
+  async findTools() {
+    const rta = await models.tools.findAll();
+    return rta;
+  }
+
   async findWorkerCost() {
     const rta = await models.WorkerCost.findAll();
     return rta;
@@ -30,6 +35,19 @@ class WorkerService {
       throw boom.notFound('Worker not found');
     }
     return worker;
+  }
+
+  async findOneTool(id) {
+    const worker = await models.tools.findByPk(id);
+    if (!worker) {
+      throw boom.notFound('Worker not found');
+    }
+    return worker;
+  }
+
+  async createTools(data) {
+    const tool = await models.tools.create(data);
+    return tool;
   }
 
 
@@ -65,6 +83,13 @@ class WorkerService {
 
   async deleteProjectWorker(id) {
     const worker = await this.findOneWorkerCosts(id);
+
+    await worker.destroy();
+    return { id };
+  }
+
+  async deleteTools(id) {
+    const worker = await this.findOneTool(id);
 
     await worker.destroy();
     return { id };

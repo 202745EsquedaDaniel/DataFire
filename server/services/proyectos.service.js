@@ -4,7 +4,6 @@ const boom = require('@hapi/boom');
 const {
   addCustomerRESchema,
   addWorkerRESchema,
-  addServiceSchema,
 } = require('../schemas/proyectos.schema');
 const { ProjectSchema } = require('../db/models/proyectos.model');
 
@@ -27,8 +26,8 @@ class ProjectService {
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           // Aquí enviarías el mensaje al cliente
-          client.send('¡Hola cliente!');
-          +console.log('bien hecho');
+          //client.send('¡Hola cliente!');
+          //console.log('bien hecho');
         }
       });
     }
@@ -41,6 +40,7 @@ class ProjectService {
             costo: updatedProjectData.costo,
             abonado: updatedProjectData.abonado,
             remaining: updatedProjectData.remaining,
+            presupuesto: updatedProjectData.presupuesto,
           };
           console.log('Datos enviados al cliente:', dataToSend); // Registro agregado aquí
           client.send(JSON.stringify(dataToSend));
@@ -536,7 +536,7 @@ class ProjectService {
           type: Abonos.sequelize.QueryTypes.RAW,
         },
       );
-
+      await this.updateCardsWebsocket(proyectoId);
       console.log('Monto abonado actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar el monto abonado:', error);
@@ -610,6 +610,43 @@ class ProjectService {
   async createPrestamo(data) {
     const nuevoPrestamo = await models.Prestamo.create(data);
     return nuevoPrestamo;
+  }
+
+  /**--------------Ajustes--------------------- */
+  async findAdjustments() {
+    const rta = await models.Adjustments.findAll();
+    return rta;
+  }
+
+  async findOneAdjustment(id) {
+    const calculo = await models.Adjustments.findByPk(id);
+    if (!calculo) {
+      throw boom.notFound('Customer not found');
+    }
+    return calculo;
+  }
+
+  async createAdjustment(data) {
+    const newCalculo = await models.Adjustments.create(data);
+
+    const proyectoId = data.projectId;
+    this.updateCardsWebsocket(proyectoId)
+    console.log(proyectoId)
+
+    return newCalculo;
+  }
+
+  async updateAdjustment(id, changes) {
+    const calculo = await this.findOneAdjustment(id);
+    const rta = await calculo.update(changes);
+    return rta;
+  }
+
+  async deleteAdjustment(id) {
+    const calculo = await this.findOneAdjustment(id);
+    await calculo.destroy();
+
+    return { id };
   }
 }
 

@@ -208,6 +208,7 @@ router.get('/projectWorker', async (req, res, next) => {
 router.get('/services', async (req, res, next) => {
   try {
     const services = await service.findServices();
+    
     res.json(services);
   } catch (error) {
     next(error);
@@ -277,6 +278,7 @@ router.get('/egresos', async (req, res, next) => {
     res.json(weeklyCosts);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
+    next(error)
   }
 });
 
@@ -286,6 +288,7 @@ router.get('/prestamos', async (req, res, next) => {
     res.json(weeklyCosts);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
+    next(error);
   }
 });
 
@@ -296,6 +299,7 @@ router.post('/prestamos', async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
+    next(error);
   }
 });
 

@@ -11,6 +11,9 @@ const worker_id = Joi.number().integer()
 const service = Joi.string()
 const cost = Joi.number().integer()
 const fecha_costo = Joi.date()
+//tools
+const tool_name = Joi.string();
+const fecha_adquisicion = Joi.date();
 
 const createWorkerSchema = Joi.object({
   name: name.required(),
@@ -26,6 +29,13 @@ const createWorkerCostSchema = Joi.object({
   service: service,
   cost: cost,
   fecha_costo: fecha_costo
+});
+
+const createToolSchema = Joi.object({
+  worker_id: worker_id,
+  tool_name: tool_name,
+  cost: cost,
+  fecha_adquisicion: fecha_adquisicion,
 });
 
 const updateWorkerSchema = Joi.object({
@@ -56,4 +66,5 @@ module.exports = {
   updateSalaryWorkerSchema,
   updateWorkerSchema,
   getWorkerSchema,
+  createToolSchema
 };
