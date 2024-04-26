@@ -18,7 +18,6 @@ router.get('/', async (req, res, next) => {
   try {
     const workers = await service.find();
     res.json(workers);
-    
   } catch (error) {
     next(error);
   }
@@ -32,7 +31,6 @@ router.get('/WorkerCosts', async (req, res, next) => {
     next(error);
   }
 });
-
 
 router.get('/tools', async (req, res, next) => {
   try {
@@ -86,7 +84,6 @@ router.get(
 );
 
 
-
 router.post(
   '/',
   validatorHandler(createWorkerSchema, 'body'),
@@ -110,6 +107,20 @@ router.post(
       const body = req.body;
       const newWorker = await service.createWorkerCost(body);
       res.status(201).json(newWorker);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.post(
+  '/tools',
+  validatorHandler(createToolSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newTool = await service.createTools(body);
+      res.status(201).json(newTool);
     } catch (error) {
       next(error);
     }
@@ -155,6 +166,20 @@ router.delete(
     try {
       const { id } = req.params;
       await service.deleteProjectWorker(id);
+      res.status(201).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.delete(
+  '/tools/:id',
+  validatorHandler(getWorkerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.deleteTools(id);
       res.status(201).json({ id });
     } catch (error) {
       next(error);

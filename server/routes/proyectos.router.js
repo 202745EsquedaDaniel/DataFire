@@ -23,6 +23,7 @@ const {
   updateAbonoSchema,
 } = require('../schemas/proyectos.schema');
 
+
 router.get('/', async (req, res, next) => {
   try {
     const projects = await service.findProjects();
@@ -339,15 +340,7 @@ router.get('/flujo', async (req, res, next) => {
       // Lógica de cálculo de ingresos semanales
       const weeklyIncomes = projects.reduce((total, project) => {
         const projectData = project.toJSON();
-        const projectWeeklyIncome = projectData.abonos.reduce(
-          (totalAbono, abono) => {
-            const abonoDate = new Date(abono.createdAt);
-            return abonoDate >= startOfWeek && abonoDate <= endOfWeek
-              ? totalAbono + abono.monto
-              : totalAbono;
-          },
-          0,
-        );
+        
 
         // Agregar ingresos semanales de abonos al total
         const abonosForWeek = projectData.abonos.filter((abono) => {

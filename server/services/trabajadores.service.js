@@ -1,6 +1,6 @@
-const { faker } = require('@faker-js/faker');
+
 const boom = require('@hapi/boom');
-const { create } = require('../schemas/trabajadores.schema');
+
 const { models } = require('../lib/sequelize');
 
 class WorkerService {
@@ -18,10 +18,11 @@ class WorkerService {
     const rta = await models.WorkerCost.findAll();
     return rta;
   }
+ 
 
   async findOne(id) {
     const worker = await models.Worker.findByPk(id, {
-      include: [{ model: models.WorkerCost, as: 'WorkerCosts' }]
+      include: [{ model: models.WorkerCost, as: 'WorkerCosts' }],
     });
     if (!worker) {
       throw boom.notFound('Worker not found');
@@ -29,13 +30,13 @@ class WorkerService {
     return worker;
   }
 
-  async findOneWorkerCosts(id) {
-    const worker = await models.WorkerCost.findByPk(id);
-    if (!worker) {
-      throw boom.notFound('Worker not found');
-    }
-    return worker;
-  }
+ // async findOneTool(id) {
+  //  const worker = await models.WorkerCost.findByPk(id);
+   // if (!worker) {
+   //   throw boom.notFound('Worker not found');
+   // }
+   // return worker;
+ // }
 
   async findOneTool(id) {
     const worker = await models.tools.findByPk(id);
@@ -56,9 +57,14 @@ class WorkerService {
     return newWorker;
   }
 
-  async createWorkerCost(data) {
-    const newWorker = await models.WorkerCost.create(data);
-    return newWorker;
+  //async createTools(data) {
+   // const newWorker = await models.WorkerCost.create(data);
+   // return newWorker;
+ // }
+
+  async createTool(data) {
+    const tool = await models.tools.create(data);
+    return tool;
   }
 
   async update(id, changes) {
@@ -82,7 +88,7 @@ class WorkerService {
   }
 
   async deleteProjectWorker(id) {
-    const worker = await this.findOneWorkerCosts(id);
+    const worker = await this.findOneTool(id);
 
     await worker.destroy();
     return { id };
@@ -94,5 +100,7 @@ class WorkerService {
     await worker.destroy();
     return { id };
   }
+
+  
 }
 module.exports = WorkerService;

@@ -299,6 +299,41 @@ class ProjectService {
     return weeklyAbonos;
   }
 
+  async findAdustments() {
+    const rta = await models.Adjustments.findAll();
+    return rta;
+  }
+
+  async findOneAdjustment(id) {
+    const calculo = await models.Adjustments.findByPk(id);
+    if (!calculo) {
+      throw boom.notFound('Customer not found');
+    }
+    return calculo;
+  }
+
+  // funcion para egresos
+  // no sirve
+  async findEgresos() {
+    try{
+    const nomina = await  models.Nomina.findAll();
+
+
+    const nominafind = nomina.map((nomina) => {
+     return {
+      fecha_pago:nomina.payment_dates,
+      monto_pagado: nomina.amount_paid,
+     };
+
+    });
+     return nominafind;
+  }catch(err){
+    console.error('Error fetching payrolls:', err);
+    throw err;
+  }
+
+  }
+
   async update(id, changes) {
     const project = await this.findOne(id);
 
@@ -437,6 +472,7 @@ class ProjectService {
 
   async updateCost(id, changes) {
     const cost = await this.findOneService(id);
+    console.log('cost:',cost)
     await this.updateCardsWebsocket(id);
     const rta = await cost.update(changes);
     return rta;
@@ -479,7 +515,6 @@ class ProjectService {
         type: models.Service.sequelize.QueryTypes.SELECT,
       },
     );
-
     await this.updateCardsWebsocket(projectId);
     return { id };
   }
@@ -492,7 +527,8 @@ class ProjectService {
       const totalCostOfServices = await models.Service.sum('cost', {
         where: { project_id: projectId },
       });
-
+      console.log(totalCostOfServices )
+      console.log(project.costo)
       // Si es el primer servicio, agrega el costo inicial del proyecto
       const totalCost = totalCostOfServices + project.costo;
 
@@ -563,7 +599,12 @@ class ProjectService {
           },
         );
 
-        await this.updateCardsWebsocket(proyectoId);
+          await this.updateCardsWebsocket(proyectoId)
+
+
+
+
+
       } catch (error) {
         console.error(
           'Error al actualizar el monto abonado y notificar a los clientes:',
@@ -618,14 +659,7 @@ class ProjectService {
     return rta;
   }
 
-  async findOneAdjustment(id) {
-    const calculo = await models.Adjustments.findByPk(id);
-    if (!calculo) {
-      throw boom.notFound('Customer not found');
-    }
-    return calculo;
-  }
-
+ 
   async createAdjustment(data) {
     const newCalculo = await models.Adjustments.create(data);
 

@@ -2,10 +2,6 @@ const { models } = require('../lib/sequelize');
 const boom = require('@hapi/boom');
 
 class AdjustmentsService {
-  async find() {
-    const rta = await models.Adjustments.findAll();
-    return rta;
-  }
 
   async findOne(id) {
     const calculo = await models.Adjustments.findByPk(id);

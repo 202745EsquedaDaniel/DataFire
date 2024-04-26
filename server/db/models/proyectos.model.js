@@ -134,6 +134,7 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
+          project.ganancia = project.abonado - project.costo;
         },
         beforeUpdate: async (project, ) => {
           // Calcula la duración en semanas antes de la actualización
@@ -149,6 +150,7 @@ class Project extends Model {
             // Cambia el valor de 'status' a true
             project.status = true;
           }
+
         },
         beforeDestroy: async (project,) => {
           await sequelize.models.Abonos.destroy({

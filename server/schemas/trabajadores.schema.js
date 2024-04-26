@@ -28,8 +28,10 @@ const createWorkerCostSchema = Joi.object({
   worker_id: worker_id,
   service: service,
   cost: cost,
-  fecha_costo: fecha_costo
+  fecha_costo: fecha_costo,
 });
+
+
 
 const createToolSchema = Joi.object({
   worker_id: worker_id,
@@ -63,8 +65,9 @@ const getWorkerSchema = Joi.object({
 module.exports = {
   createWorkerSchema,
   createWorkerCostSchema,
+  createToolSchema,
   updateSalaryWorkerSchema,
   updateWorkerSchema,
   getWorkerSchema,
-  createToolSchema
+  
 };

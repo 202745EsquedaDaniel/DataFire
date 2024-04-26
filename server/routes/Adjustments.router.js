@@ -9,6 +9,8 @@ const {
 } = require('../schemas/clientes.schema');
 const { createAdjustmentSchema } = require('../schemas/adjustment.schema');
 
+
+
 router.get('/', async (req, res, next) => {
   try {
     const customers = await service.findAdjustments();
