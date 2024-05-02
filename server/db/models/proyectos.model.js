@@ -135,6 +135,7 @@ class Project extends Model {
           );
           project.duracion = durationInWeeks;
           project.ganancia = project.abonado - project.costo;
+          project.remaining = project.presupuesto - project.abonado;
         },
         beforeUpdate: async (project, ) => {
           // Calcula la duración en semanas antes de la actualización
@@ -144,6 +145,7 @@ class Project extends Model {
             (end - start) / (7 * 24 * 60 * 60 * 1000),
           );
           project.duracion = durationInWeeks;
+          project.remaining = project.presupuesto - project.abonado;
           
           // Verifica si 'remaining' se actualiza y es igual a 0
           if (project.changed('remaining') && project.remaining === 0) {

@@ -38,10 +38,12 @@ const NominasSemanalesSchema = {
   salary_hour: {
     allowNull: false,
     type: DataTypes.FLOAT,
+    defaultValue: 0,
   },
   horas_trabajadas: {
     allowNull: false,
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
   horas_extra: {
     allowNull: false,
@@ -54,17 +56,17 @@ const NominasSemanalesSchema = {
     defaultValue: 0,
   },
   isr: {
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },
   seguro_social: {
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },
   salario_final: {
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },

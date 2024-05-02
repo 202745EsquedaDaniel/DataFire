@@ -298,7 +298,7 @@ router.post('/prestamos', async (req, res, next) => {
     const nuevoPrestamo = await service.createPrestamo(req.body);
     res.status(201).json(nuevoPrestamo);
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: 'Internal Server Error' });
     next(error);
   }

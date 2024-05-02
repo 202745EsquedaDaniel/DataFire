@@ -1,17 +1,8 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-
 const { PROJECT_TABLE } = require('./proyectos.model');
 const { WORKER_TABLE } = require('./trabajadores.model');
-const { Nomina, NOMINA_TABLE } = require('./nominas.model');
+const { Nomina, } = require('./nominas.model');
 const { Service } = require('./servicios.model');
-
-const { models } = require('../../lib/sequelize');
-
-const payrollService = require('../../services/payrolls.service');
-const service = new payrollService();
-
-const { Project } = require('./proyectos.model');
-
 const PROJECT_WORKER_TABLE = 'project_has_workers';
 
 const ProjectWorkerSchema = {

@@ -1,7 +1,7 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
 const { PROJECT_TABLE } = require('./proyectos.model');
-const { Hooks } = require('sequelize/lib/hooks');
+
 
 const SERVICES_TABLE = 'services';
 
@@ -65,7 +65,7 @@ class Service extends Model {
       modelName: 'Service',
       timestamps: false,
       hooks: {
-        afterCreate: async (service, options) => {
+        afterCreate: async (service) => {
           const project = await this.sequelize.models.Project.findByPk(
             service.project_id,
           );
@@ -74,7 +74,7 @@ class Service extends Model {
             await project.save();
           }
         },
-        afterDestroy: async (service, options) => {
+        afterDestroy: async (service) => {
           const project = await this.sequelize.models.Project.findByPk(
             service.project_id,
           );

@@ -58,21 +58,21 @@ class WorkerCost extends Model {
       modelName: 'WorkerCost',
       timestamps: false,
       hooks: {
-        afterCreate: async (workerCost, options) => {
+        afterCreate: async (workerCost) => {
           const worker = await this.sequelize.models.Worker.findByPk(workerCost.worker_id);
           if (worker) {
             worker.WorkerCost += workerCost.cost;
             await worker.save();
           }
         },
-        beforeDestroy: async (workerCost, options) => {
+        beforeDestroy: async (workerCost ) => {
           const worker = await this.sequelize.models.Worker.findByPk(workerCost.worker_id);
           if (worker) {
             worker.WorkerCost -= workerCost.cost;
             await worker.save();
           }
         },
-        beforeUpdate: async (workerCost, options) => {
+        beforeUpdate: async (workerCost ) => {
           const worker = await this.sequelize.models.Worker.findByPk(workerCost.worker_id);
           if (worker) {
             // Restar el coste antiguo y sumar el nuevo

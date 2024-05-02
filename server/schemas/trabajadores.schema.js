@@ -20,8 +20,9 @@ const createWorkerSchema = Joi.object({
   last_name: last_name.required(),
   age: age.required(),
   position: position.required(),
-  semanal_hours: semanal_hours.required(),
-  salary_hour: salary_hour.required(),
+  salary: salary.required(),
+  salary_hour: salary_hour,
+  semanal_hours: semanal_hours,
 });
 
 const createWorkerCostSchema = Joi.object({

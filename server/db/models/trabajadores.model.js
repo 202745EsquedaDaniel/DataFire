@@ -86,7 +86,8 @@ class Worker extends Model {
         beforeSave: (worker) => {
           worker.salary
           if(worker.salary != 0){
-            var diario = worker.salary / 7
+            var salarioMensual = worker.salary * 4
+            var diario = salarioMensual / worker.semanal_hours
             worker.salary_hour = diario
           }
  
